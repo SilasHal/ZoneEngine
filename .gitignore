@@ -34,7 +34,3 @@
 *.vsconfig
 *.vs
 
-DerivedDataCache/
-intermediate/
-Saved/
-Platforms/
