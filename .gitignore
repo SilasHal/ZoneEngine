@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+*.sln
+*.vsconfig
+*.vs
+
+DerivedDataCache/
+intermediate/
+Saved/
+Platforms/
