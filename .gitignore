@@ -30,7 +30,6 @@ x64
 *.exe
 *.out
 *.app
-*.sln
 *.vsconfig
 *.vs
 

@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source">
-      <UniqueIdentifier>{c5318378-fd22-4935-a503-634eeb459a28}</UniqueIdentifier>
+    <Filter Include="WindowsCommons">
+      <UniqueIdentifier>{a8d23ce1-7639-42a0-938f-2c02c002ce60}</UniqueIdentifier>
     </Filter>
-    <Filter Include="lib">
-      <UniqueIdentifier>{45985761-fad5-4202-8b5b-acbc8b699ccf}</UniqueIdentifier>
+    <Filter Include="Source">
+      <UniqueIdentifier>{cdc08eed-9883-4f05-b6a3-cb99b472f3b7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -14,8 +14,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\lib\d3dx12.h">
-      <Filter>lib</Filter>
+    <ClInclude Include="..\WindowsCommons\d3dx12.h">
+      <Filter>WindowsCommons</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
