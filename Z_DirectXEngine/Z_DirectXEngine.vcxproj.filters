@@ -7,6 +7,9 @@
     <Filter Include="Source">
       <UniqueIdentifier>{cdc08eed-9883-4f05-b6a3-cb99b472f3b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{7d1320bc-f174-42fd-8b0a-0ac3427fbcf3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\main.cpp">
@@ -17,5 +20,10 @@
     <ClInclude Include="..\WindowsCommons\d3dx12.h">
       <Filter>WindowsCommons</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Shader\shaders.hlsl">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

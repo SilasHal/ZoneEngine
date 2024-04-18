@@ -1,35 +1,32 @@
-#include<iostream>
 #include <SDKDDKVer.h>
 #define WIN32_LEAN_AND_MEAN // 从 Windows 头中排除极少使用的资料
 #include <windows.h>
 #include <tchar.h>
-//添加WTL支持 方便使用COM
-#include <wrl.h>
-using namespace Microsoft;
-using namespace Microsoft::WRL;
+#include <wrl.h>  //添加WTL支持 方便使用COM
+#include <strsafe.h>
 #include <dxgi1_6.h>
 #include <DirectXMath.h>
-using namespace DirectX;
-//for d3d12
-#include <d3d12.h>
+#include <d3d12.h>	//for d3d12
 #include <d3d12shader.h>
 #include <d3dcompiler.h>
+#if defined(_DEBUG)
+#include <dxgidebug.h>
+#endif
+
+using namespace Microsoft;
+using namespace Microsoft::WRL;
+using namespace DirectX;
+
 //linker
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 
-#if defined(_DEBUG)
-#include <dxgidebug.h>
-#endif
+#define GRS_WND_CLASS_NAME _T("GRS Game Window Class")
+#define GRS_WND_TITLE	_T("GRS DirectX12 Trigger Sample")
 
-#include "..\WindowsCommons\d3dx12.h"
-
-#define GRS_WND_CLASS_NAME _T("Game Window Class")
-#define GRS_WND_TITLE   _T("DirectX12 Trigger Sample")
-
-#define GRS_THROW_IF_FAILED(hr) if (FAILED(hr)){ throw CGRSCOMException(hr); }
+#define GRS_THROW_IF_FAILED(hr) {HRESULT _hr = (hr);if (FAILED(_hr)){ throw CGRSCOMException(_hr); }}
 
 class CGRSCOMException
 {
@@ -53,7 +50,7 @@ struct GRS_VERTEX
 
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 
-int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR    lpCmdLine, int nCmdShow)
+int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
 	const UINT							nFrameBackBufCount = 3u;
 
@@ -121,7 +118,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR    l
 
 			lastSlash = _tcsrchr(pszAppPath, _T('\\'));
 			if (lastSlash)
-			{//删除Debug 或 Unreleased
+			{//删除Debug 或 Release 路径
 				*(lastSlash + 1) = _T('\0');
 			}
 		}
@@ -346,7 +343,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR    l
 			TCHAR pszShaderFileName[MAX_PATH] = {};
 			StringCchPrintf(pszShaderFileName
 				, MAX_PATH
-				, _T("%s1-D3D12Triangle\\Shader\\shaders.hlsl")
+				, _T("%sShader\\shaders.hlsl")
 				, pszAppPath);
 
 			GRS_THROW_IF_FAILED(D3DCompileFromFile(pszShaderFileName
@@ -549,7 +546,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR    l
 				pICMDList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 				pICMDList->IASetVertexBuffers(0, 1, &stVertexBufferView);
 
-				//Draw Call！！！
+				//Draw Call ！！！
 				pICMDList->DrawInstanced(3, 1, 0, 0);
 
 				//又一个资源屏障，用于确定渲染已经结束可以提交画面去显示了
