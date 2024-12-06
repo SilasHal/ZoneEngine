@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Workspace\github\ZoneEngine\ZoneEditor\obj\Debug\
+E:\Station\github\ZoneEngine\ZoneEditor\obj\Debug\
 ZoneEditor
 none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP
-C:\Workspace\github\ZoneEngine\ZoneEditor\App.xaml
-21045300334
+E:\Station\github\ZoneEngine\ZoneEditor\App.xaml
+4808500451
 
-7954700889
-198-556154604
-GameProject\ProjectBrowserDialog.xaml;MainWindow.xaml;
+12-1825925915
+198-1431420039
+GameProject\CreateProject.xaml;GameProject\OpenProject.xaml;GameProject\ProjectBrowserDialog.xaml;MainWindow.xaml;
 
 False
 
