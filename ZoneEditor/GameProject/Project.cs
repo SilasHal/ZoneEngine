@@ -28,6 +28,8 @@ namespace ZoneEditor.GameProject
         {
             Name = name;
             Path = path;
+
+            _scenes.Add(new Scene(this, "Default Scene"));
         }
     }
 }

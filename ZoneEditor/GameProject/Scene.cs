@@ -3,14 +3,17 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ZoneEditor.GameProject
 {
+    [DataContract]
     public class Scene :ViewModelBase
     {
         private string _name = "MyProject";
+        [DataMember]
         public string Name
         {
             get => _name;
@@ -23,7 +26,7 @@ namespace ZoneEditor.GameProject
                 }
             }
         }
-
+        [DataMember]
         public Project Project { get; private set; }
         public Scene(Project project, string name) 
         { 

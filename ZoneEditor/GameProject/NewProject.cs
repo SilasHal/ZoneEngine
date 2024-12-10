@@ -40,7 +40,7 @@ namespace ZoneEditor.GameProject
     class NewProject : ViewModelBase
     {
         //TODO: get the path from the installation location
-        private readonly string templatePath = @"..\..\ZoneEditor\ProjectTemplates";
+        private readonly string templatePath = @"..\..\ZoneEditor\ProjectTemplates\";
 
         private string _projectName = "MyProject";
 
@@ -58,7 +58,7 @@ namespace ZoneEditor.GameProject
             }
         }
 
-        private string _projectPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\ZoneEngineProject\";
+        private string _projectPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\ZoneEngineProjects\";
 
         public string ProjectPath
         {
@@ -68,7 +68,7 @@ namespace ZoneEditor.GameProject
                 if (_projectPath != value)
                 {
                     _projectPath = value;
-                    ValidateProjectPath();
+                    //ValidateProjectPath();
                     OnPropertyChanged(nameof(ProjectPath));
                 }
             }
@@ -112,8 +112,8 @@ namespace ZoneEditor.GameProject
             if (!Path.EndsInDirectorySeparator(path))
             {
                 path += @"\";
-                path += $@"{ProjectName}";
             }
+            path += $@"{ProjectName}\";
             IsValid = false;
             if (string.IsNullOrWhiteSpace(ProjectName.Trim()))
             {
@@ -133,7 +133,7 @@ namespace ZoneEditor.GameProject
             }
             else if (Directory.Exists(path) && Directory.EnumerateFileSystemEntries(path).Any()) 
             {
-                ErrorMsg = "Selected project folder already exists and is not empty.";
+                ErrorMsg = $"Selected project folder already exists and is not empty.";
             }
             else
             {
@@ -170,7 +170,10 @@ namespace ZoneEditor.GameProject
                 dirInfo.Attributes |= FileAttributes.Hidden;
                 File.Copy(template.IconFilePath, Path.GetFullPath(Path.Combine(dirInfo.FullName, "Icon.png")));
                 File.Copy(template.ScreenshotFilePath, Path.GetFullPath(Path.Combine(dirInfo.FullName, "Screenshot.png")));
-                return "";
+
+                var project = new Project(ProjectName, path);
+                Serializer.ToFile(project, path + $"{ProjectName}" + Project.Extension);
+                return path;
             }
             catch (Exception e)
             {
