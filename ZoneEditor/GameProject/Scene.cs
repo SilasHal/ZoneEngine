@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ZoneEditor.GameProject
 {
-    [DataContract]
+    [DataContract(IsReference = true)]
     public class Scene :ViewModelBase
     {
         private string _name = "MyProject";
@@ -28,6 +28,21 @@ namespace ZoneEditor.GameProject
         }
         [DataMember]
         public Project Project { get; private set; }
+
+        private bool _isActive;
+        [DataMember]
+        public bool IsActive
+        {
+            get => _isActive;
+            set
+            {
+                if (_isActive != value)
+                {
+                    _isActive = value;
+                    OnPropertyChanged(nameof(IsActive));
+                }
+            }
+        }
         public Scene(Project project, string name) 
         { 
             Debug.Assert(project != null);
