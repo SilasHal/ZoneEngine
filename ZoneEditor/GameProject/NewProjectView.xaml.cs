@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace ZoneEditor.GameProject
 {
     /// <summary>
-    /// Interaction logic for CreateProject.xaml
+    /// Interaction logic for NewProjectView.xaml
     /// </summary>
-    public partial class CreateProject : UserControl
+    public partial class NewProjectView : UserControl
     {
-        public CreateProject()
+        public NewProjectView()
         {
             InitializeComponent();
         }

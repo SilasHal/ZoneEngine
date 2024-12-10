@@ -7,10 +7,10 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="GameProject\CreateProject.xaml.cs">
+    <Compile Update="GameProject\NewProjectView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="GameProject\OpenProject.xaml.cs">
+    <Compile Update="GameProject\OpenProjectView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="GameProject\ProjectBrowserDialog.xaml.cs">
@@ -18,10 +18,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="GameProject\CreateProject.xaml">
+    <Page Update="GameProject\NewProjectView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="GameProject\OpenProject.xaml">
+    <Page Update="GameProject\OpenProjectView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="GameProject\ProjectBrowserDialog.xaml">
