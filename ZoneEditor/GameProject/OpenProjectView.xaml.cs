@@ -34,6 +34,7 @@ namespace ZoneEditor.GameProject
         {
             OpenSelectedProject();
         }
+
         private void OpenSelectedProject()
         {
             var project = OpenProject.Open(projectsListBox.SelectedItem as ProjectData);

@@ -27,7 +27,6 @@ namespace ZoneEditor.GameProject
         [DataMember(Name = "Scenes")]
         private ObservableCollection<Scene> _scenes = new ObservableCollection<Scene>();
         public ReadOnlyObservableCollection<Scene> Scenes { get; private set; }
-        
 
         private Scene _activeScene;
         public Scene ActiveScene
@@ -74,6 +73,7 @@ namespace ZoneEditor.GameProject
             Name = name;
             Path = path;
 
+            //_scenes.Add(new Scene(this, "Default Scene"));
             OnDeserialized(new StreamingContext());
         }
     }
