@@ -6,7 +6,9 @@
         xmlns:local="clr-namespace:ZoneEditor"
         xmlns:editors="clr-namespace:ZoneEditor.Editors"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        Title="MainWindow" Height="1080" Width="1920">
+        Title="ZoneEngine" Height="1080" Width="1920"
+        Icon="pack://application:,,,/ZoneEditor;component/Resource/ZoneIcon.ico"
+        ResizeMode="CanResizeWithGrip">
     <Grid>
         <editors:WorldEditorView/>
     </Grid>

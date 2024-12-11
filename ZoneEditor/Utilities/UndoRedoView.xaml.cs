@@ -12,16 +12,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using ZoneEditor.GameProject;
 
-namespace ZoneEditor.Editors
+namespace ZoneEditor.Utilities
 {
     /// <summary>
-    /// Interaction logic for ProjectLayoutView.xaml
+    /// UndoRedoView.xaml 的交互逻辑
     /// </summary>
-    public partial class ProjectLayoutView : UserControl
+    public partial class UndoRedoView : UserControl
     {
-        public ProjectLayoutView()
+        public UndoRedoView()
         {
             InitializeComponent();
         }

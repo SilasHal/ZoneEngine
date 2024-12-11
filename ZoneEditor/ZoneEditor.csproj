@@ -20,4 +20,14 @@
     <Optimize>True</Optimize>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Resource\ZoneIcon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resource\ZoneIcon.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
 </Project>
