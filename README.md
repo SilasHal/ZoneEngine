@@ -1,7 +1,7 @@
 # ZoneEngine - A Personal Game Engine Project
 
 ---
-
+![ZoneEngine](ZoneEditor/Resource/ZoneIcon.png)
 ## Introduction
 
 **ZoneEngine** is a custom game engine project designed to help with exploring and learning the structure and implementation of modern game engine frameworks. The goal of this project is to experiment with rendering effects, physics systems, and cross-platform rendering interfaces while gradually building a functional and extensible game engine.
