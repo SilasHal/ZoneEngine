@@ -8,7 +8,8 @@
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
         Title="ZoneEngine" Height="1080" Width="1920"
         Icon="pack://application:,,,/ZoneEditor;component/Resource/ZoneIcon.ico"
-        ResizeMode="CanResizeWithGrip">
+        ResizeMode="CanResizeWithGrip"
+        >
     <Grid>
         <editors:WorldEditorView/>
     </Grid>
