@@ -22,7 +22,9 @@ namespace ZoneEditor.Utilities
 			catch (Exception e)
 			{
 				Debug.WriteLine(e.Message);
-			}
+                Logger.Log(MessageType.Error, $"Failed to deserialize {instance} to {path}");
+                throw;
+            }
         }
 
 
@@ -38,7 +40,8 @@ namespace ZoneEditor.Utilities
 			catch (Exception e)
 			{
                 Debug.WriteLine(e.Message);
-				return default(T);
+				Logger.Log(MessageType.Error, $"Failed to deserialize {path}");
+				throw;
             }
         }
     }

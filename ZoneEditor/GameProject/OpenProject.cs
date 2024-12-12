@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Shapes;
 using ZoneEditor.Utilities;
 
 namespace ZoneEditor.GameProject
@@ -92,6 +93,8 @@ namespace ZoneEditor.GameProject
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
+                Logger.Log(MessageType.Error, $"Failed to read project data");
+                throw;
             }
         }
 

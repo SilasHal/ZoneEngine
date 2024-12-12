@@ -68,7 +68,7 @@ namespace ZoneEditor.GameProject
                 if (_projectPath != value)
                 {
                     _projectPath = value;
-                    //ValidateProjectPath();
+                    ValidateProjectPath();
                     OnPropertyChanged(nameof(ProjectPath));
                 }
             }
@@ -180,7 +180,8 @@ namespace ZoneEditor.GameProject
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
-                return string.Empty;
+                Logger.Log(MessageType.Error, $"Failed to create {ProjectName}");
+                throw;
             }
         }
 
@@ -206,6 +207,8 @@ namespace ZoneEditor.GameProject
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
+                Logger.Log(MessageType.Error, $"Failed to read project templates");
+                throw;
             }
         }
 
