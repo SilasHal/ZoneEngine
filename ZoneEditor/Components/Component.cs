@@ -8,16 +8,22 @@ using System.Threading.Tasks;
 
 namespace ZoneEditor.Components
 {
+    interface IMSComponent { }
     [DataContract]
-    public class Components : ViewModelBase
+    abstract class Component : ViewModelBase
     {
         [DataMember]
         public GameEntity Owner {  get; private set; }
 
-        public Components(GameEntity owner)
+        public Component(GameEntity owner)
         {
             Debug.Assert(owner != null);
             Owner = owner;
         }
+    }
+
+    abstract class MScomponent<T> : ViewModelBase, IMSComponent where T : Component
+    {
+
     }
 }

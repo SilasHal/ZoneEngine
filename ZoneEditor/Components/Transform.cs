@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace ZoneEditor.Components
 {
     [DataContract]
-    public class Transform : Components
+    class Transform : Component
     {
         private Vector3 _position;
         [DataMember]
