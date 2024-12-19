@@ -3,6 +3,7 @@
 #pragma once
 
 #include "..\Components\ComponentsCommon.h"
+#include "TransformComponent.h"
 
 namespace zone::game_entity {
 
@@ -14,6 +15,8 @@ public:
 	constexpr explicit entity() : _id{ id::invalid_id } {};
 	constexpr entity_id get_id() const{ return _id; }
 	constexpr bool is_valid() const { return id::is_valid(_id); }
+
+	transform::component transform() const;
 private:
 	entity_id _id;
 };
