@@ -7,7 +7,7 @@ namespace zone::math {
 constexpr float	pi = 3.1415926535897932384626433832795f;
 constexpr float epsilon = 1e-5f;
 
-#ifdef _Win64
+#ifdef _WIN64
 using Vec2F = DirectX::XMFLOAT2;
 using Vec2FA = DirectX::XMFLOAT2A;
 

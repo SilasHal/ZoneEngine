@@ -76,7 +76,7 @@ bool is_alive(entity e)
 
 }
 
-transform::component entity::transform() const 
+transform::component entity::transform() const
 {
 	assert(is_alive(*this));
 	const id::id_type index{ id::index(_id) };

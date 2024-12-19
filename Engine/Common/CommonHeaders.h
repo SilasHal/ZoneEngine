@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <typeinfo>
 
-#ifdef _Win64
+#ifdef _WIN64
 #include<DirectXMath.h>
 #endif // _Win64
 
@@ -15,3 +15,4 @@
 //Common Headers
 #include "ZoneTypes.h"
 #include "..\Utilities\Utilities.h"
+#include "..\Utilities\MathTypes.h"
