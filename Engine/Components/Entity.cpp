@@ -11,7 +11,7 @@ utl::vector<transform::component>		transforms;
 utl::vector<id::generation_type>		generations;
 utl::deque<entity_id>					free_ids;
 
-}
+} // anonymous namespace
 
 entity create_game_entity(const entity_info& info)
 {

@@ -10,7 +10,7 @@ namespace {
 utl::vector<math::Vec3F> positions;
 utl::vector<math::Vec4F> rotations;
 utl::vector<math::Vec3F> scales;
-}
+} // anonymous namespace
 
 component create_transform(const init_info& info, game_entity::entity entity)
 {

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ZoneEditor": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}
