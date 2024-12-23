@@ -9,6 +9,7 @@
         Title="ZoneEngine" Height="1080" Width="1920"
         Icon="pack://application:,,,/ZoneEditor;component/Resource/ZoneIcon.ico"
         ResizeMode="CanResizeWithGrip"
+        Style="{StaticResource ZoneWindowStyle}"
         >
     <Grid>
         <editors:WorldEditorView/>
