@@ -16,15 +16,20 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,30,0,0">
                 <ListBox Width="195" Height="250" ItemsSource="{Binding Projects}" x:Name="projectsListBox" SelectedIndex="0">
                     <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
+                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource ListBoxItemStyle}">
                             <EventSetter Event="MouseDoubleClick" Handler="OnListBoxItem_Mouse_DoubleClick"/>
                         </Style>
                     </ListBox.ItemContainerStyle>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
+                            <StackPanel Width="180">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="{Binding Icon}" Width="50" Height="50" Margin="0,0,5,0"/>
-                                <TextBlock Text="{Binding ProjectName}"/>
+                                <TextBlock Text="{Binding ProjectName}" FontSize="16" FontFamily="Bahnschrift condensed"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                                <TextBlock Text="{Binding ProjectPath}" FontSize="8" TextTrimming="WordEllipsis"/>
+                                <TextBlock Text="{Binding Date}" FontSize="8"/>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
