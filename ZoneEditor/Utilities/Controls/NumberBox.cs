@@ -30,6 +30,7 @@ namespace ZoneEditor.Utilities.Controls
             get => (string)GetValue(ValueProperty);
             set => SetValue(ValueProperty, value);
         }
+
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value), typeof(string), typeof(NumberBox), 
                                                                                               new FrameworkPropertyMetadata(null,FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
         public override void OnApplyTemplate()
