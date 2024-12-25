@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Printing.IndexedProperties;
@@ -155,44 +156,39 @@ namespace ZoneEditor.Components
 
         public List<GameEntity> SelectedEntities { get; }
 
-
-    public static float? GetMixedValue(List<GameEntity> entities, Func<GameEntity, float> getProperty)
-    {
-        var value = getProperty(entities.First());
-        foreach (var entity in entities.Skip(1))
+        private void MakeComponentList()
         {
-            if (!value.IsTheSameAs(getProperty(entity)))
-            {
-                return null;
-            }
-        }
-        return value;
-    }
+            _components.Clear();
+            var firstEntity = SelectedEntities.FirstOrDefault();
+            if (firstEntity == null) return;
 
-        public static bool? GetMixedValue(List<GameEntity> entities, Func<GameEntity, bool> getProperty)
-        {
-            var value = getProperty(entities.First());
-            foreach (var entity in entities.Skip(1))
+            foreach (var component in firstEntity.Components)   
             {
-                if (value != getProperty(entity))
+                var type = component.GetType();
+                if(!SelectedEntities.Skip(1).Any(entity=>entity.GetComponent(type) == null))
                 {
-                    return null;
+                    Debug.Assert(Components.FirstOrDefault(x => x.GetType() == type) == null);
+                    _components.Add(component.GetMultiselectionComponent(this));
                 }
             }
-            return value;
         }
 
-        public static string? GetMixedValue(List<GameEntity> entities, Func<GameEntity, string> getProperty)
+        public static float? GetMixedValue<T>(List<T> objects, Func<T, float> getProperty)
         {
-            var value = getProperty(entities.First());
-            foreach (var entity in entities.Skip(1))
-            {
-                if (value != getProperty(entity))
-                {
-                    return null;
-                }
-            }
-            return value;
+            var value = getProperty(objects.First());
+            return objects.Skip(1).Any(x => !getProperty(x).IsTheSameAs(value)) ? (float?)null : value;
+        }
+
+        public static bool? GetMixedValue<T>(List<T> objects, Func<T, bool> getProperty)
+        {
+            var value = getProperty(objects.First());
+            return objects.Skip(1).Any(x => value != getProperty(x)) ? (bool?)null : value;
+        }
+
+        public static string? GetMixedValue<T>(List<T> objects, Func<T, string> getProperty)
+        {
+            var value = getProperty(objects.First());
+            return objects.Skip(1).Any(x => value != getProperty(x)) ? null : value;
         }
 
         protected virtual bool UpdateGameEntities(string propertyName)
@@ -217,8 +213,11 @@ namespace ZoneEditor.Components
         {
             _enableUpdates = false;
             UpdateMSGameEntity();
+            MakeComponentList();
             _enableUpdates = true;
         }
+
+
 
         public MSEntity(List<GameEntity> entities)
         {

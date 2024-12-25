@@ -37,7 +37,7 @@ namespace ZoneEditor.DllWrappers
             //transform component
             {
                 var _component = entity.GetComponent<Transform>();
-                _descriptor.Transform.Position = _component.Positon;
+                _descriptor.Transform.Position = _component.Position;
                 _descriptor.Transform.Rotation = _component.Rotation;
                 _descriptor.Transform.Scale = _component.Scale;
             }
