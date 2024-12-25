@@ -2,12 +2,12 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:ZoneEditor.Dictionaries">
 
-    <Color x:Key="Editor.Window.GrayColor1">#FF1E1E1E</Color>
-    <Color x:Key="Editor.Window.GrayColor2">#FF2C2C2C</Color>
-    <Color x:Key="Editor.Window.GrayColor3">#FF3A3A3A</Color>
-    <Color x:Key="Editor.Window.GrayColor4">#FF4A4A4A</Color>
-    <Color x:Key="Editor.Window.GrayColor5">#FF5A5A5A</Color>
-    <Color x:Key="Editor.Window.GrayColor6">#FF6A6A6A</Color>
+    <Color x:Key="Editor.Window.GrayColor1">#FF0F0F0F</Color>
+    <Color x:Key="Editor.Window.GrayColor2">#FF1A1A1A</Color>
+    <Color x:Key="Editor.Window.GrayColor3">#FF252525</Color>
+    <Color x:Key="Editor.Window.GrayColor4">#FF353535</Color>
+    <Color x:Key="Editor.Window.GrayColor5">#FF404040</Color>
+    <Color x:Key="Editor.Window.GrayColor6">#FF505050</Color>
 
     <Color x:Key="Editor.Disabled.FontColor">#FF868686</Color>
     <Color x:Key="Editor.FontColor">#FFDDDDDD</Color>
