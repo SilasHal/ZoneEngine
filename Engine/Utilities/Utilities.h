@@ -9,6 +9,21 @@
 namespace zone::utl {
 template<typename T>
 using vector = std::vector<T>;
+
+template<typename T>
+void erase_unordered(std::vector<T>& vec, size_t index)
+{
+	if (vec.size() > 1) 
+	{
+		std::iter_swap(vec.begin() + index, vec.end() - 1);
+		vec.pop_back();
+	}
+	else 
+	{
+		vec.clear();
+	}
+}
+
 }
 #endif
 
