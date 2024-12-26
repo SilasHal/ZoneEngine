@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Data;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,26 +15,20 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using ZoneEditor.GameProject;
 
 namespace ZoneEditor.Editors
 {
     /// <summary>
-    /// WorldEditorView.xaml 的交互逻辑
+    /// GameEntityView.xaml 的交互逻辑
     /// </summary>
-    public partial class WorldEditorView : UserControl
+    public partial class GameEntityView : UserControl
     {
-        public WorldEditorView()
+        public static GameEntityView Instance { get;  private set; }
+        public GameEntityView()
         {
             InitializeComponent();
-            Loaded += OnworldEditorViewLoad;
-        }
-
-        private void OnworldEditorViewLoad(object sender, RoutedEventArgs e)
-        {
-            Loaded -= OnworldEditorViewLoad;
-            Focus();
-            ((INotifyCollectionChanged)Project.UndoRedo.UndoList).CollectionChanged += (s, e) => Focus();
+            DataContext = null;
+            Instance = this;
         }
     }
 }
