@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ZoneEditor.GameProject;
 
 namespace ZoneEditor.Editors
 {
@@ -23,6 +25,14 @@ namespace ZoneEditor.Editors
         public WorldEditorView()
         {
             InitializeComponent();
+            Loaded += OnworldEditorViewLoad;
+        }
+
+        private void OnworldEditorViewLoad(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OnworldEditorViewLoad;
+            Focus();
+            ((INotifyCollectionChanged)Project.UndoRedo.UndoList).CollectionChanged += (s, e) => Focus();
         }
     }
 }
