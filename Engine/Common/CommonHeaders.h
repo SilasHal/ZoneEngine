@@ -8,6 +8,8 @@
 #include <assert.h>
 #include <typeinfo>
 #include <memory>
+#include <unordered_map>
+#include <string>
 
 #ifdef _WIN64
 #include<DirectXMath.h>

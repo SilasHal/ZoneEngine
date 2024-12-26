@@ -7,6 +7,7 @@
 #include "ScriptComponent.h"
 
 
+
 namespace zone{
 namespace game_entity{
 
@@ -44,6 +45,8 @@ private:
 namespace detail {
 using script_ptr = std::unique_ptr<entity_script>;
 using script_creator = script_ptr(*)(game_entity::entity entity);
+using string_hash = std::hash<std::string>;
+uint8 register_script(size_t, script_creator);
 
 template<class script_class>
 script_ptr create_script(game_entity::entity entity)
@@ -51,6 +54,17 @@ script_ptr create_script(game_entity::entity entity)
 	assert(entity.is_valid());
 	return std::make_unique<script_class>(entity);
 }
+
+#define REGISTER_SCRIPT(TYPE)															\
+		class TYPE;																		\
+		namespace {				                                                        \
+		const uint8 _reg##TYPE                                                          \
+		{ zone::script::detail::register_script(                                        \
+			zone::script::detail::string_hash()(#TYPE),									\
+			&zone::script::detail::create_script<TYPE>) };								\
+		}
+
 } // namespace detail
+    
 } // namespace script
 } // namespace zone
