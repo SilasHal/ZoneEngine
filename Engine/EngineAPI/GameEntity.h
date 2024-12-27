@@ -58,7 +58,7 @@ script_ptr create_script(game_entity::entity entity)
 #define REGISTER_SCRIPT(TYPE)															\
 		class TYPE;																		\
 		namespace {				                                                        \
-		const uint8 _reg##TYPE                                                          \
+		const uint8 _reg_##TYPE                                                         \
 		{ zone::script::detail::register_script(                                        \
 			zone::script::detail::string_hash()(#TYPE),									\
 			&zone::script::detail::create_script<TYPE>) };								\
