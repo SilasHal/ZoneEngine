@@ -68,7 +68,7 @@ namespace ZoneEditor.GameProject
                 if (_projectPath != value)
                 {
                     _projectPath = value;
-                    //ValidateProjectPath();
+                    ValidateProjectPath();
                     OnPropertyChanged(nameof(ProjectPath));
                 }
             }

@@ -28,7 +28,7 @@ namespace ZoneEditor.Editors
         {
             InitializeComponent();
             DataContext = null;
-            Instance = this;
+            Instance = this;    
         }
     }
 }
