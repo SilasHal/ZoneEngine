@@ -49,21 +49,28 @@ namespace ZoneEditor.GameProject
         public Project Project { get; private set; }
 
         [DataMember(Name =nameof(GameEntities))]
-        private readonly ObservableCollection<GameEntity> _gameEntities = new ObservableCollection<GameEntity>();
+        private ObservableCollection<GameEntity> _gameEntities = new ObservableCollection<GameEntity>();
         public ReadOnlyObservableCollection<GameEntity> GameEntities { get; private set; }
 
         public ICommand AddGameEntityCommand { get; private set; }
         public ICommand RemoveGameEntityCommand { get; private set; }
 
-        private void AddGameEntity(GameEntity entity)
+        private void AddGameEntity(GameEntity entity, int index = -1)
         {
             Debug.Assert(!_gameEntities.Contains(entity));
-            _gameEntities.Add(entity);
+            if (index == -1)
+            {
+                _gameEntities.Add(entity);
+            }
+            else
+            {
+                _gameEntities.Insert(index, entity);
+            }
         }
 
         private void RemoveGameEntity(GameEntity entity)
         {
-            Debug.Assert(!_gameEntities.Contains(entity));
+            Debug.Assert(_gameEntities.Contains(entity));
             _gameEntities.Remove(entity);
         }
 

@@ -74,7 +74,9 @@ namespace ZoneEditor.GameProject
         }
 
         public void Unload()
-        { }
+        {
+            UndoRedo.Reset();
+        }
 
         public static void Save(Project project)
         {

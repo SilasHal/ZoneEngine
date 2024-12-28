@@ -11,6 +11,7 @@ using ZoneEditor.GameProject;
 namespace ZoneEditor.Components
 {
     [DataContract]
+    [KnownType(typeof(Transform))]
     public class GameEntity : ViewModelBase
     {
         public string _name;
@@ -33,12 +34,23 @@ namespace ZoneEditor.Components
 
         [DataMember(Name =nameof(Components))]
         private readonly ObservableCollection<Component> _components = new ObservableCollection<Component>();
-        public ReadOnlyObservableCollection<Component> Components { get; }
+        public ReadOnlyObservableCollection<Component> Components { get; private set; }
+
+        [OnDeserialized]
+        void Ondeserialized(StreamingContext context)
+        {
+            if(_components != null)
+            {
+                Components = new ReadOnlyObservableCollection<Component>(_components);
+                OnPropertyChanged(nameof(Components));
+            }
+        }
 
         public GameEntity(Scene scene)
         {
             Debug.Assert(scene != null);
             ParentScene = scene;
+            _components.Add(new Transform(this));
         }
     }
 }
