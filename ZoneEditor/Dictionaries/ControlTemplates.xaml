@@ -365,7 +365,7 @@
 
     <Style x:Key="ZoneDialogStyle" TargetType="{x:Type Window}">
         <Setter Property="BorderBrush" Value="{StaticResource Editor.Selected.BackgroundBrush}"/>
-        <Setter Property="Background" Value="{StaticResource Editor.Window.GrayBrush1}"/>
+        <Setter Property="Background" Value="{StaticResource Editor.Window.GrayBrush2}"/>
         <Setter Property="WindowChrome.WindowChrome">
             <Setter.Value>
                 <WindowChrome
