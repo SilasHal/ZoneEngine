@@ -18,6 +18,8 @@ namespace ZoneEditor
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static string ZonePath { get; private set; } = @"E:\Station\github\ZoneEngine";
+
         public MainWindow()
         {
             InitializeComponent();
