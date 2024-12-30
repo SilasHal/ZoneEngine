@@ -25,6 +25,7 @@ namespace ZoneEditor.GameProject
         [DataMember]
         public string Path {  get; private set; }
         public string FullPath => $@"{Path}{Name}\{Name}{Extension}";
+        public string Solution => $@"{Path}{Name}.sln";
 
         [DataMember(Name = "Scenes")]
         private ObservableCollection<Scene> _scenes = new ObservableCollection<Scene>();
@@ -52,7 +53,6 @@ namespace ZoneEditor.GameProject
         public ICommand SaveCommand { get; private set; }
         public ICommand AddSceneCommand {  get; private set; }
         public ICommand RemoveSceneCommand { get; private set; }
-
 
         private void AddScene(string sceneName)
         {

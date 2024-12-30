@@ -12,6 +12,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ZoneEditor.GameProject;
+using System.Diagnostics;
+using ZoneEditor.Utilities;
 
 namespace ZoneEditor.GameDev
 {
@@ -20,9 +22,45 @@ namespace ZoneEditor.GameDev
     /// </summary>
     public partial class NewScriptDialog : Window
     {
-        public NewScriptDialog()
+        private static readonly string _cppCode = @"include ""{0}.h""
+
+namespace {1} {{
+
+REGISTER_SCRIPT({0});
+void {0}::begin_play()
+{{
+
+}}
+
+void {0}::update(float detalTime)
+{{
+
+}}
+
+}} // namespace {1}";
+
+        private static readonly string _hCode = @"#pragma once
+namespace {1} {{
+
+class {0} : public zone::script::entity_script
+{{
+public:
+    constexpr explicit {0}(zone::game_entity::entity entity)
+        : zone::script::entiy_script{{entity}} {{}}
+
+    void begin_play() override;
+    void update(float detalTime) override;
+private:
+}};
+}} // namespace {1};";
+
+        private static readonly string _namespace = GetNamespaceFromProjectName();
+
+        private static string GetNamespaceFromProjectName()
         {
-            InitializeComponent();
+            var projectName = Project.Current.Name;
+            projectName = projectName.Replace(" ", "_");
+            return projectName;
         }
 
         bool Validate()
@@ -76,16 +114,60 @@ namespace ZoneEditor.GameDev
         private void OnScriptName_TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if(!Validate()) return;
+            var name = scriptName.Text.Trim();
+            messageTextBlock.Text = $"{name}.h and {name}.cpp will be created in the {Project.Current.Name}.";
         }
 
         private void OnScriptPath_TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            Validate();
+        }
+
+        private async void OnCreate_Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Validate()) return;
+            IsEnabled = false;
+
+            try
+            {
+                var name = scriptName.Text.Trim();
+                var path = Path.GetFullPath(Path.Combine(Project.Current.Path, scriptPath.Text.Trim()));
+                var solution = Project.Current.Solution;
+                var projectName = Project.Current.Name;
+                await Task.Run(() => CreateScript(name, path, solution, projectName));
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Logger.Log(MessageType.Error, $"Failed to create script {scriptName.Text}");
+            }
+        }
+
+        private void CreateScript(string name, string path, string solution, string projectName)
+        {
+            if(!Directory.Exists(path)) 
+                Directory.CreateDirectory(path);
+
+            var cppPath = Path.GetFullPath(Path.Combine(path, $"{name}.cpp"));
+            var hPath = Path.GetFullPath(Path.Combine(path, $"{name}.h"));
+
+            using (var sw = File.CreateText(cppPath)) 
+            {
+                sw.Write(string.Format(_cppCode, name, _namespace));
+            }
+
+            using(var sw = File.CreateText(hPath))
+            {
+                sw.Write(string.Format(_hCode, name, _namespace));
+            }
 
         }
 
-        private void OnCreate_Button_Click(object sender, RoutedEventArgs e)
+        public NewScriptDialog()
         {
-
+            InitializeComponent();
+            Owner = Application.Current.MainWindow;
+            scriptPath.Text = @"GameCode\";
         }
     }
 }
