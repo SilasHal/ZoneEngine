@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using ZoneEditor.GameProject;
 using System.Diagnostics;
 using ZoneEditor.Utilities;
+using System.Windows.Media.Animation;
 
 namespace ZoneEditor.GameDev
 {
@@ -22,7 +23,7 @@ namespace ZoneEditor.GameDev
     /// </summary>
     public partial class NewScriptDialog : Window
     {
-        private static readonly string _cppCode = @"include ""{0}.h""
+        private static readonly string _cppCode = @"#include ""{0}.h""
 
 namespace {1} {{
 
@@ -46,7 +47,7 @@ class {0} : public zone::script::entity_script
 {{
 public:
     constexpr explicit {0}(zone::game_entity::entity entity)
-        : zone::script::entiy_script{{entity}} {{}}
+        : zone::script::entity_script{{entity}} {{}}
 
     void begin_play() override;
     void update(float detalTime) override;
@@ -71,7 +72,7 @@ private:
             string errorMsg = string.Empty;
             if (string.IsNullOrEmpty(name))
             {
-                errorMsg = "Script name cannot be empty";
+                errorMsg = "Type in a script name";
             }
             else if (name.IndexOfAny(Path.GetInvalidFileNameChars()) != -1 || name.Any(x => char.IsWhiteSpace(x)))
             {
@@ -127,6 +128,10 @@ private:
         {
             if (!Validate()) return;
             IsEnabled = false;
+            busyAnimation.Opacity = 0;
+            busyAnimation.Visibility = Visibility.Visible;
+            DoubleAnimation fadeIn = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromMilliseconds(500)));
+            busyAnimation.BeginAnimation(OpacityProperty, fadeIn);
 
             try
             {
@@ -140,6 +145,17 @@ private:
             {
                 Debug.WriteLine(ex.Message);
                 Logger.Log(MessageType.Error, $"Failed to create script {scriptName.Text}");
+            }
+            finally
+            {
+                DoubleAnimation fadeOut = new DoubleAnimation(1, 0, new Duration(TimeSpan.FromMilliseconds(200)));
+                fadeOut.Completed += (s, e) =>
+                {
+                    busyAnimation.Opacity = 0;
+                    busyAnimation.Visibility = Visibility.Hidden;
+                    Close();
+                };
+                busyAnimation.BeginAnimation(OpacityProperty, fadeOut);
             }
         }
 
@@ -161,6 +177,15 @@ private:
                 sw.Write(string.Format(_hCode, name, _namespace));
             }
 
+            string[] files = new string[] { cppPath, hPath };
+
+            for(int i = 0; i < 3; ++i)
+            {
+                if (!VisualStudio.AddFilesToSolution(solution, projectName, files))
+                    System.Threading.Thread.Sleep(1000);
+
+                else break;
+            }
         }
 
         public NewScriptDialog()

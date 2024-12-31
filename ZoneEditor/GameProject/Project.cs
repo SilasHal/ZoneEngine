@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using ZoneEditor.GameDev;
 using ZoneEditor.Utilities;
 
 namespace ZoneEditor.GameProject
@@ -24,7 +25,7 @@ namespace ZoneEditor.GameProject
         
         [DataMember]
         public string Path {  get; private set; }
-        public string FullPath => $@"{Path}{Name}\{Name}{Extension}";
+        public string FullPath => $@"{Path}{Name}{Extension}";
         public string Solution => $@"{Path}{Name}.sln";
 
         [DataMember(Name = "Scenes")]
@@ -74,6 +75,7 @@ namespace ZoneEditor.GameProject
 
         public void Unload()
         {
+            VisualStudio.CloseVisualStudio();
             UndoRedo.Reset();
         }
 
