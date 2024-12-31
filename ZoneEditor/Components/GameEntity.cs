@@ -37,7 +37,7 @@ namespace ZoneEditor.Components
         public ReadOnlyObservableCollection<Component> Components { get; private set; }
 
         [OnDeserialized]
-        void Ondeserialized(StreamingContext context)
+        void OnDeserialized(StreamingContext context)
         {
             if(_components != null)
             {
@@ -51,6 +51,7 @@ namespace ZoneEditor.Components
             Debug.Assert(scene != null);
             ParentScene = scene;
             _components.Add(new Transform(this));
+            OnDeserialized(new StreamingContext());
         }
     }
 }
