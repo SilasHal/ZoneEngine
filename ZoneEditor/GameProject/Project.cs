@@ -31,9 +31,9 @@ namespace ZoneEditor.GameProject
 
         [DataMember]
         public string Name { get; private set; } = "New Project";
-        
+
         [DataMember]
-        public string Path {  get; private set; }
+        public string Path { get; private set; }
         public string FullPath => $@"{Path}{Name}{Extension}";
         public string Solution => $@"{Path}{Name}.sln";
 
@@ -79,7 +79,7 @@ namespace ZoneEditor.GameProject
         public ICommand UndoCommand { get; private set; }
         public ICommand RedoCommand { get; private set; }
         public ICommand SaveCommand { get; private set; }
-        public ICommand AddSceneCommand {  get; private set; }
+        public ICommand AddSceneCommand { get; private set; }
         public ICommand RemoveSceneCommand { get; private set; }
         public ICommand BuildCommand { get; private set; }
 
@@ -91,7 +91,7 @@ namespace ZoneEditor.GameProject
             _scenes.Add(new Scene(this, sceneName));
         }
 
-        private void RemoveScene(Scene scene) 
+        private void RemoveScene(Scene scene)
         {
             Debug.Assert(_scenes.Contains(scene));
             _scenes.Remove(scene);
@@ -131,17 +131,27 @@ namespace ZoneEditor.GameProject
                 Debug.WriteLine(ex.Message);
                 throw;
             }
+<<<<<<< HEAD
            
+=======
+
+>>>>>>> 94e62a72
         }
 
         private void LoadGameCodeDll()
         {
+<<<<<<< HEAD
             throw new NotImplementedException();
+=======
+>>>>>>> 94e62a72
         }
 
         private void UnloadGameCodeDll()
         {
+<<<<<<< HEAD
             throw new NotImplementedException();
+=======
+>>>>>>> 94e62a72
         }
 
         [OnDeserialized]
@@ -183,7 +193,7 @@ namespace ZoneEditor.GameProject
             BuildCommand = new RelayCommand<bool>(x => BuildGameCodeDll(), x => !VisualStudio.IsDebugging() && VisualStudio.BuildDone);
         }
 
-        public Project(string name,string path)
+        public Project(string name, string path)
         {
             Name = name;
             Path = path;
