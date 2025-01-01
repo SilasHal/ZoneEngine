@@ -136,12 +136,10 @@ namespace ZoneEditor.GameProject
 
         private void LoadGameCodeDll()
         {
-            throw new NotImplementedException();
         }
 
         private void UnloadGameCodeDll()
         {
-            throw new NotImplementedException();
         }
 
         [OnDeserialized]
