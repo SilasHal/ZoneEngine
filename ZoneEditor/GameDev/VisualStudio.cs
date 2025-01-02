@@ -11,19 +11,6 @@ using ZoneEditor.Utilities;
 
 namespace ZoneEditor.GameDev
 {
-<<<<<<< HEAD
-	static class VisualStudio
-	{
-		public static bool BuildSucceeded { get; private set; } = true;
-        public static bool BuildDone { get; private set; } = true;
-
-        private static EnvDTE80.DTE2 _vsInstance = null;
-		private static readonly string _progID = "VisualStudio.DTE.17.0";
-
-
-        [DllImport("ole32.dll")]
-		private static extern int CreateBindCtx(uint reserved, out IBindCtx ppbc);
-=======
     static class VisualStudio
     {
         public static bool BuildSucceeded { get; private set; } = true;
@@ -35,7 +22,7 @@ namespace ZoneEditor.GameDev
 
         [DllImport("ole32.dll")]
         private static extern int CreateBindCtx(uint reserved, out IBindCtx ppbc);
->>>>>>> 94e62a72
+
 
         [DllImport("ole32.dll")]
         private static extern int GetRunningObjectTable(uint reserved, out IRunningObjectTable pprot);
@@ -172,25 +159,6 @@ namespace ZoneEditor.GameDev
         }
 
         public static bool IsDebugging()
-<<<<<<< HEAD
-		{
-			bool result = false;
-			for (int i = 0; i < 3; ++i)
-			{
-				try
-				{
-					result = _vsInstance != null && (_vsInstance.Debugger.CurrentProgram != null || _vsInstance.Debugger.CurrentMode == EnvDTE.dbgDebugMode.dbgRunMode);
-                    if (result) break;
-                }
-				catch (Exception ex)
-				{
-                    Debug.WriteLine(ex.Message);
-                    if (!result) System.Threading.Thread.Sleep(1000);
-                }
-			}
-			return result;
-		}
-=======
         {
             bool result = false;
             for (int i = 0; i < 3; ++i)
@@ -208,43 +176,11 @@ namespace ZoneEditor.GameDev
             }
             return result;
         }
->>>>>>> 94e62a72
+
 
 
         public static void BuildSolution(Project project, string configName, bool showWindow = true)
         {
-<<<<<<< HEAD
-			if (IsDebugging())
-			{
-				Logger.Log(MessageType.Error, "Visual Studio is currently running a process.");
-				return;
-			}
-
-			OpenVisualStudio(project.Solution);
-			BuildDone = BuildSucceeded = false;
-
-			for (int i = 0; i < 3; ++i)
-			{
-				try
-				{
-					if(!_vsInstance.Solution.IsOpen) _vsInstance.Solution.Open(project.Solution);
-					_vsInstance.MainWindow.Visible = showWindow;
-
-					_vsInstance.Events.BuildEvents.OnBuildProjConfigBegin += OnBuildSolutionBegin;
-                    _vsInstance.Events.BuildEvents.OnBuildProjConfigDone += OnBuildSolutionDone;
-
-                    _vsInstance.Solution.SolutionBuild.SolutionConfigurations.Item(configName).Activate();
-					_vsInstance.ExecuteCommand("Build.BuildSolution");
-					if(BuildSucceeded) break;
-                }
-				catch (Exception ex)
-				{
-                    Debug.WriteLine(ex.Message);
-					Debug.WriteLine($"Attempt {i}: Failed to build {project.Name}");
-                    System.Threading.Thread.Sleep(1000);
-                }
-			}
-=======
             if (IsDebugging())
             {
                 Logger.Log(MessageType.Error, "Visual Studio is currently running a process.");
@@ -275,7 +211,6 @@ namespace ZoneEditor.GameDev
                     System.Threading.Thread.Sleep(1000);
                 }
             }
->>>>>>> 94e62a72
         }
 
     }
