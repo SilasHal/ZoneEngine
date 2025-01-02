@@ -4,6 +4,16 @@
                     xmlns:local ="clr-namespace:ZoneEditor.Dictionaries"
                     xmlns:utl ="clr-namespace:ZoneEditor.Utilities.Controls">
 
+    <Style x:Key="FocusVisual">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle Margin="2" StrokeDashArray="1 2" Stroke="{StaticResource Editor.FontBrush}" SnapsToDevicePixels="true" StrokeThickness="1"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="{x:Type TextBlock}" x:Key="LightTextBlockStyle">
         <Setter Property="Foreground" Value="{StaticResource Editor.FontBrush}"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
@@ -230,15 +240,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="FocusVisual">
-        <Setter Property="Control.Template">
-            <Setter.Value>
-                <ControlTemplate>
-                    <Rectangle Margin="2" StrokeDashArray="1 2" Stroke="{StaticResource Editor.FontBrush}" SnapsToDevicePixels="true" StrokeThickness="1"/>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+
 
     <Style x:Key="SimpleButton" TargetType="{x:Type Button}">
         <Setter Property="Background" Value="{StaticResource Editor.Window.GrayBrush1}"/>

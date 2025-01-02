@@ -6,6 +6,7 @@
 
 #if USE_STL_VECTOR
 #include<vector>
+#include <algorithm>
 namespace zone::utl {
 template<typename T>
 using vector = std::vector<T>;

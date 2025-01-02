@@ -18,7 +18,7 @@ namespace ZoneEditor
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static string ZonePath { get; private set; } = @"D:\WorkSpace\ZoneEngine";
+        public static string ZonePath { get; private set; }
 
         public MainWindow()
         {
