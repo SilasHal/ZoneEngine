@@ -12,6 +12,7 @@ namespace ZoneEditor.Components
     public class Transform : Component
     {
         private Vector3 _position;
+        [DataMember]
         public Vector3 Position
         {
             get => _position;
@@ -26,6 +27,7 @@ namespace ZoneEditor.Components
         }
 
         private Vector3 _rotation;
+        [DataMember]
         public Vector3 Rotation
         {
             get => _rotation;
@@ -40,6 +42,7 @@ namespace ZoneEditor.Components
         }
 
         private Vector3 _scale;
+        [DataMember]
         public Vector3 Scale
         {
             get => _scale;
@@ -53,8 +56,6 @@ namespace ZoneEditor.Components
             }
         }
 
-        public Transform(GameEntity owner) : base(owner)
-        {
-        }
+        public Transform(GameEntity owner) : base(owner) { }
     }
 }
