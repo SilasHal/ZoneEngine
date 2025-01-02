@@ -48,6 +48,8 @@ using script_creator = script_ptr(*)(game_entity::entity entity);
 using string_hash = std::hash<std::string>;
 uint8 register_script(size_t, script_creator);
 
+script_creator get_script_creator(size_t tag);
+
 template<class script_class>
 script_ptr create_script(game_entity::entity entity)
 {
@@ -55,8 +57,20 @@ script_ptr create_script(game_entity::entity entity)
 	return std::make_unique<script_class>(entity);
 }
 
+#ifdef USE_WITH_EDITOR
+uint8 add_script_name(const char* name);
 #define REGISTER_SCRIPT(TYPE)															\
-		class TYPE;																		\
+		namespace {				                                                        \
+		const uint8 _reg_##TYPE                                                         \
+		{ zone::script::detail::register_script(                                        \
+			zone::script::detail::string_hash()(#TYPE),									\
+			&zone::script::detail::create_script<TYPE>) };								\
+		const uint8 _name_##TYPE                                                        \
+		{ zone::script::detail::add_script_name(#TYPE) };								\
+		}																				
+
+#else
+#define REGISTER_SCRIPT(TYPE)															\
 		namespace {				                                                        \
 		const uint8 _reg_##TYPE                                                         \
 		{ zone::script::detail::register_script(                                        \
@@ -64,7 +78,7 @@ script_ptr create_script(game_entity::entity entity)
 			&zone::script::detail::create_script<TYPE>) };								\
 		}
 
+#endif // USE_WITH_EDITOR
 } // namespace detail
-    
 } // namespace script
 } // namespace zone

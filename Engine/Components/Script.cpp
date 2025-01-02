@@ -24,6 +24,17 @@ script_registry& registery()
 	return reg;
 }
 
+#ifdef USE_WITH_EDITOR
+utl::vector<std::string>& script_names()
+{
+	// NOTE:  we put this static variable in a function because of
+	//        the initialization order of static data. This way, we 
+	//		  can be certain that the data is initialized before accessing it.
+	static utl::vector<std::string> names;
+	return names;
+}
+#endif
+
 bool exists(script_id id)
 {
 	assert(id::is_valid(id));
@@ -41,6 +52,15 @@ uint8 register_script(size_t tag, script_creator func)
 	assert(result);
 	return result;
 }
+
+#ifdef USE_WITH_EDITOR
+uint8 add_script_name(const char* name)
+{
+	script_names().emplace_back(name);
+	return true;
+}
+#endif // USE_WITH_EDITOR
+
 } // namespace detail
 
 component create(init_info info, game_entity::entity entity)
