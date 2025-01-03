@@ -9,7 +9,7 @@ namespace zone::game_entity {
 namespace {
 
 utl::vector<transform::component>		transforms;
-utl::vector<script::component>		scripts;
+utl::vector<script::component>			scripts;
 utl::vector<id::generation_type>		generations;
 utl::deque<entity_id>					free_ids;
 

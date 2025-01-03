@@ -17,9 +17,16 @@ namespace ZoneEditor.EngineAPIStructs
     }
 
     [StructLayout(LayoutKind.Sequential)]
+    class ScriptComponent
+    {
+        public IntPtr ScriptCreator;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
     class GameEntityDescriptor
     {
         public TransformComponent Transform = new TransformComponent();
+        public ScriptComponent Script = new ScriptComponent();
     }
 }
 
@@ -35,6 +42,13 @@ namespace ZoneEditor.DllWrappers
         [DllImport(_engineDll)]
         public static extern int UnloadGameCodeDll();
 
+        [DllImport(_engineDll)]
+        public static extern IntPtr GetScriptCreator(string name);
+
+        [DllImport(_engineDll)]
+        [return: MarshalAs(UnmanagedType.SafeArray)]
+        public static extern string[] GetScriptNames();
+
         internal static class EntityAPI
         {
             [DllImport(_engineDll)]
@@ -42,6 +56,7 @@ namespace ZoneEditor.DllWrappers
             public static int CreateGameEntity(GameEntity entity)
             {
                 GameEntityDescriptor _descriptor = new GameEntityDescriptor();
+
                 //transform component
                 {
                     var _component = entity.GetComponent<Transform>();
@@ -49,6 +64,12 @@ namespace ZoneEditor.DllWrappers
                     _descriptor.Transform.Rotation = _component.Rotation;
                     _descriptor.Transform.Scale = _component.Scale;
                 }
+                // script component
+                {
+                    //var _component = entity.GetComponent<Script>();
+                    //_descriptor.Script.ScriptCreator = GetScriptCreator(_component.ScriptName);
+                }
+
                 return CreateGameEntity(_descriptor);
             }
 
