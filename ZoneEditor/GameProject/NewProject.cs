@@ -180,7 +180,8 @@ namespace ZoneEditor.GameProject
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
-                return string.Empty;
+                Logger.Log(MessageType.Error, $"Failed to create {template.ProjectType}");
+                throw;
             }
         }
 
@@ -206,6 +207,8 @@ namespace ZoneEditor.GameProject
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
+                Logger.Log(MessageType.Error, $"Failed to read project data project templates");
+                throw;
             }
         }
 
