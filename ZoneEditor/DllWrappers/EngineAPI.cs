@@ -4,7 +4,9 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
 using ZoneEditor.Components;
+using ZoneEditor.GameProject;
 using ZoneEditor.EngineAPIStructs;
+using ZoneEditor.Utilities;
 
 namespace ZoneEditor.EngineAPIStructs
 {
@@ -66,10 +68,19 @@ namespace ZoneEditor.DllWrappers
                 }
                 // script component
                 {
-                    //var _component = entity.GetComponent<Script>();
-                    //_descriptor.Script.ScriptCreator = GetScriptCreator(_component.ScriptName);
+                    var _component = entity.GetComponent<Script>();
+                    if (_component != null && Project.Current !=null)
+                    {
+                        if (Project.Current.AvailableScripts.Contains(_component.Name))
+                        {
+                            _descriptor.Script.ScriptCreator = GetScriptCreator(_component.Name);
+                        }
+                        else
+                        {
+                            Logger.Log(MessageType.Error, $"Unable to find script with name {_component.Name}. Game entity will be created without script component!");
+                        }
+                    }
                 }
-
                 return CreateGameEntity(_descriptor);
             }
 

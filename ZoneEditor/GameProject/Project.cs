@@ -11,6 +11,7 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using ZoneEditor.Components;
 using ZoneEditor.DllWrappers;
 using ZoneEditor.GameDev;
 using ZoneEditor.Utilities;
@@ -160,6 +161,7 @@ namespace ZoneEditor.GameProject
 
         public void Unload()
         {
+            UnloadGameCodeDll();
             VisualStudio.CloseVisualStudio();
             UndoRedo.Reset();
         }
@@ -178,6 +180,7 @@ namespace ZoneEditor.GameProject
             if (File.Exists(dllPath) && EngineAPI.LoadGameCodeDll(dllPath) != 0)
             {
                 AvailableScripts = EngineAPI.GetScriptNames();
+                ActiveScene.GameEntities.Where(x => x.GetComponent<Script>() != null).ToList().ForEach(x => x.IsActive = true);
                 Logger.Log(MessageType.Info, $"Game Code DLL loaded successfully");
             }
             else
@@ -188,6 +191,7 @@ namespace ZoneEditor.GameProject
 
         private void UnloadGameCodeDll()
         {
+            ActiveScene.GameEntities.Where(x => x.GetComponent<Script>() != null).ToList().ForEach(x => x.IsActive = false);
             if (EngineAPI.UnloadGameCodeDll() != 0)
             {
                 Logger.Log(MessageType.Info, $"Game Code DLL unloaded successfully");
@@ -223,6 +227,7 @@ namespace ZoneEditor.GameProject
                 OnPropertyChanged(nameof(Scenes));
             }
             ActiveScene = Scenes.FirstOrDefault(x => x.IsActive);
+            Debug.Assert(ActiveScene == null);
 
             await BuildGameCodeDll(false);
 
