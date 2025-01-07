@@ -38,10 +38,9 @@
                         <utl:UndoRedoView DataContext="{Binding UndoRedo}"/>
                     </TabItem>
                     <TabItem Header="Log">
-                        <utl:LoggerView />
+                        <utl:LoggerView Margin="5,5"/>
                     </TabItem>
                 </TabControl>
-                <utl:UndoRedoView DataContext="{Binding UndoRedo}" Grid.Row="1"/>
             </Grid>
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Left"
                           VerticalAlignment="Stretch"/>

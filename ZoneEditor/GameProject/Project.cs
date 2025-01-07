@@ -15,7 +15,7 @@ using ZoneEditor.Utilities;
 namespace ZoneEditor.GameProject
 {
     [DataContract(Name = "Game")]
-    public class Project : ViewModelBase
+    class Project : ViewModelBase
     {
         public static string Extension { get; } = ".zone";
 

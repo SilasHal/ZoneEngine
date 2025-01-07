@@ -14,7 +14,7 @@ using ZoneEditor.Utilities;
 namespace ZoneEditor.GameProject
 {
     [DataContract]
-    public class Scene :ViewModelBase
+    class Scene :ViewModelBase
     {
         private bool _isActive;
         [DataMember]
