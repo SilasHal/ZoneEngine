@@ -14,10 +14,13 @@
         <sys:Boolean x:Key="False">False</sys:Boolean>
     </UserControl.Resources>
     <UserControl.InputBindings>
-        <KeyBinding Key="Z" Modifiers="Control" Command="{Binding UndoCommand}" />
-        <KeyBinding Key="Z" Modifiers="Control+Shift" Command="{Binding RedoCommand}" />
-        <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}" />
-        <KeyBinding Key="F7" Command="{Binding BuildCommand}" CommandParameter="{StaticResource True}"/>
+        <KeyBinding Command="{Binding UndoCommand}" Key="Z" Modifiers="Control"  />
+        <KeyBinding Command="{Binding RedoCommand}" Key="Z" Modifiers="Control+Shift"  />
+        <KeyBinding Command="{Binding SaveCommand}" Key="S" Modifiers="Control"  />
+        <KeyBinding Command="{Binding DebugStartCommand}" Key="F5"  />
+        <KeyBinding Command="{Binding DebugStartWithoutDebuggingCommand}" Key="F5" Modifiers="Control"  />
+        <KeyBinding Command="{Binding DebugStopCommand}" Key="F5" Modifiers="Shift"  />
+        <KeyBinding Command="{Binding BuildCommand}" Key="F7"  CommandParameter="{StaticResource True}"/>
     </UserControl.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
