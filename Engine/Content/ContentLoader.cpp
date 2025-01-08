@@ -9,7 +9,8 @@
 #if !defined(SHIPPING)  
 
 #include <fstream>
-
+#include <filesystem>
+#include <Windows.h>
 namespace zone::content {
 
 namespace
@@ -75,6 +76,14 @@ static_assert(_countof(component_readers) == component_type::count);
 } // anonymous namespace
 bool load_game()
 {
+    //set the working directory to the executable path
+    wchar_t path[MAX_PATH];
+    const uint32 length{ GetModuleFileName(0, &path[0], MAX_PATH) };
+    if (!length || GetLastError() == ERROR_INSUFFICIENT_BUFFER); return false;
+    std::filesystem::path p{ path };
+    SetCurrentDirectory(p.parent_path().wstring().c_str());
+
+    // read game.bin and create the entities
     std::ifstream game("game.bin", std::ios::in | std::ios::binary);
     utl::vector<uint8> buffer(std::istreambuf_iterator<char>(game), {});
     assert(buffer.size());
@@ -91,7 +100,7 @@ bool load_game()
         const uint32 num_components{ *at }; at += su32;
         if (!num_components) return false;
 
-        for (uint32 component_index{ 0 }; component_index < num_components; ++component_index) 
+        for (uint32 component_index{ 0 }; component_index < num_components; ++component_index)
         {
             const uint32 component_type{ *at }; at += su32;
             assert(component_type < component_type::count);

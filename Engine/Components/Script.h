@@ -12,4 +12,5 @@ namespace zone::script {
 
 	component create(init_info info, game_entity::entity entity);
 	void remove(component _component);
+	void update(float deltaTime);
 }

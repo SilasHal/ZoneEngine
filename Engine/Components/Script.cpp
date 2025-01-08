@@ -109,6 +109,15 @@ void remove(component _component)
 	id_mapping[id::index(last_id)] = index;
 	id_mapping[id::index(id)] = id::invalid_id;
 }
+
+void update(float deltaTime) 
+{
+	for (auto& ptr : entity_scripts)
+	{
+		ptr->update(deltaTime);
+	}
+}
+
 }
 
 
