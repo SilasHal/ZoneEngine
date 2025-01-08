@@ -8,7 +8,7 @@
 namespace zone::content {
 
 bool load_game();
-bool unload_game();
+void unload_game();
 
 }
 #endif //!defined(SHIPPING)
