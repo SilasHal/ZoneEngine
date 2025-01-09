@@ -115,7 +115,7 @@ namespace ZoneEditor.Editors
         }
         private void AddComponent(ComponentType componentType, object data)
         {
-            var creationFunction = ComponentFactory.GetComponentFactory(componentType);
+            var creationFunction = ComponentFactory.GetCreationFunction(componentType);
             var chandedEntities = new List<(GameEntity entity, Component component)>();
             var vm = DataContext as MSEntity;
             foreach (var entity in vm.SelectedEntities)

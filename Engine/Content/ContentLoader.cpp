@@ -66,14 +66,19 @@ bool read_script(const uint8*& data, game_entity::entity_info& info)
 }
 
 using component_reader = bool(*)(const uint8*&, game_entity::entity_info&);
+
 component_reader component_readers[]
 {
     read_transform,
     read_script,
 };
+
 static_assert(_countof(component_readers) == component_type::count);
 
 } // anonymous namespace
+
+
+
 bool load_game()
 {
     //set the working directory to the executable path
@@ -89,8 +94,7 @@ bool load_game()
     assert(buffer.size());
     const uint8* at{ buffer.data() };
     constexpr uint32 su32{ sizeof(uint32) };
-    const uint32 num_entities{ *at };
-    at += su32;
+    const uint32 num_entities{ *at }; at += su32;
     if (!num_entities) return false;
     
     for (uint32 entity_index{ 0 }; entity_index < num_entities; ++entity_index)

@@ -23,7 +23,7 @@ namespace ZoneEditor.Components
                 (entity, data)=>new Script(entity){Name = (string)data },
             };
 
-        public static Func<GameEntity, object, Component> GetComponentFactory(ComponentType componentType)
+        public static Func<GameEntity, object, Component> GetCreationFunction(ComponentType componentType)
         {
             Debug.Assert((int)componentType < _function.Length);
             return _function[(int)componentType];
