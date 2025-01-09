@@ -5,4 +5,5 @@
 #include <typeinfo>
 
 //common headers
+#include "..\Utilities\Utilities.h"
 #include "ZoneTypes.h"
