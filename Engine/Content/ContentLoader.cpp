@@ -84,7 +84,7 @@ bool load_game()
     //set the working directory to the executable path
     wchar_t path[MAX_PATH];
     const uint32 length{ GetModuleFileName(0, &path[0], MAX_PATH) };
-    if (!length || GetLastError() == ERROR_INSUFFICIENT_BUFFER); return false;
+    if (!length || GetLastError() == ERROR_INSUFFICIENT_BUFFER) return false;
     std::filesystem::path p{ path };
     SetCurrentDirectory(p.parent_path().wstring().c_str());
 
