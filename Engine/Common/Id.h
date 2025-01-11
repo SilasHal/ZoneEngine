@@ -49,9 +49,9 @@ constexpr id_type new_generation(id_type id)
 
 #if _DEBUG
 namespace detail {
-	struct id_base
+	struct IDBase
 	{
-		constexpr explicit id_base(id_type id) : _id{ id } {}
+		constexpr explicit IDBase(id_type id) : _id{ id } {}
 		constexpr operator id_type() const { return _id; }
 	private:
 		id_type	_id;
@@ -59,11 +59,11 @@ namespace detail {
 }
 
 #define DEFINE_TYPED_ID(name)								\
-	struct name final : id::detail::id_base				    \
+	struct name final : id::detail::IDBase				    \
 	{														\
 		constexpr explicit name(id::id_type id)				\
-			: id_base{ id } {}								\
-		constexpr name() : id_base{ 0 } {}					\
+			: IDBase{ id } {}								\
+		constexpr name() : IDBase{ 0 } {}					\
 	};
 
 #else

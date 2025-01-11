@@ -23,7 +23,7 @@ enum component_type
 
     count
 };
-utl::vector<game_entity::entity> entities;
+utl::vector<game_entity::Entity> entities;
 transform::init_info transform_info{};
 script::init_info script_info{};
 
@@ -112,7 +112,7 @@ bool load_game()
         }
 
         assert(info.transform);
-        game_entity::entity entity{ game_entity::create(info) };
+        game_entity::Entity entity{ game_entity::create(info) };
         if (!entity.is_valid()) return false;
         entities.emplace_back(entity);
     }

@@ -51,9 +51,9 @@ struct game_entity_descriptor
 	script_component script;
 };
 
-game_entity::entity entity_form_id(id::id_type id)
+game_entity::Entity entity_form_id(id::id_type id)
 {
-	return game_entity::entity{ game_entity::entity_id{id} };
+	return game_entity::Entity{ game_entity::EntityID{id} };
 }
 
 } // anonymous namespace
@@ -75,5 +75,5 @@ EDITOR_INTERFACE id::id_type CreateGameEntity(game_entity_descriptor* _descripto
 EDITOR_INTERFACE void RemoveGameEntity(id::id_type id)
 {
 	assert(id::is_valid(id));
-	game_entity::remove(game_entity::entity_id{ id });
+	game_entity::remove(game_entity::EntityID{ id });
 }

@@ -13,6 +13,6 @@ struct init_info
 	float scale[3]{ 1.f,1.f,1.f };
 };
 
-component create(init_info info, game_entity::entity entity);
+component create(init_info info, game_entity::Entity entity);
 void remove(component _component);
 }

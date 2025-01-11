@@ -14,6 +14,7 @@
     <ClInclude Include="EngineAPI\ScriptComponent.h" />
     <ClInclude Include="Components\Script.h" />
     <ClInclude Include="Content\ContentLoader.h" />
+    <ClInclude Include="Platform\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Components\Entity.cpp" />
