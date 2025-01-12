@@ -70,7 +70,7 @@ uint8 add_script_name(const char* name)
 
 } // namespace detail
 
-component create(init_info info, game_entity::Entity entity)
+component create(init_info info, game_entity::entity entity)
 {
 	assert(entity.is_valid());
 	assert(info.script_creator);

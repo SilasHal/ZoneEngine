@@ -54,7 +54,7 @@ private:
 		while (count > 0) 
 		{
 			++_added;
-			game_entity::Entity entity{ game_entity::create(entity_info) };
+			game_entity::entity entity{ game_entity::create(entity_info) };
 
 			assert(entity.is_valid() && id::is_valid(entity.get_id()));
 			_entities.push_back(entity);
@@ -75,7 +75,7 @@ private:
 		while (count > 0)
 		{
 			const uint32 index{ (uint32)rand() % (uint32)_entities.size() };
-			const game_entity::Entity entity{ _entities[index] };
+			const game_entity::entity entity{ _entities[index] };
 			assert(entity.is_valid() && id::is_valid(entity.get_id()));
 			if (entity.is_valid())
 			{
@@ -94,7 +94,7 @@ private:
 		std::cout << "Entities deleted: " << _removed << "\n";
 	}
 
-	utl::vector<game_entity::Entity> _entities;
+	utl::vector<game_entity::entity> _entities;
 
 	uint32 _added{ 0 };
 	uint32 _removed{ 0 };

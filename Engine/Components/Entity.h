@@ -20,9 +20,9 @@ struct entity_info
 	script::init_info* script{ nullptr };
 };
 	
-Entity create(entity_info info);
-void remove(EntityID id);
-bool is_alive(EntityID id);
+entity create(entity_info info);
+void remove(entity_id id);
+bool is_alive(entity_id id);
 
 }
 }

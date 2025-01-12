@@ -10,7 +10,7 @@ namespace zone::script {
 		detail::script_creator script_creator;
 	};
 
-	component create(init_info info, game_entity::Entity entity);
+	component create(init_info info, game_entity::entity entity);
 	void remove(component _component);
 	void update(float deltaTime);
 }

@@ -11,30 +11,30 @@ namespace {
 utl::vector<transform::component>		transforms;
 utl::vector<script::component>			scripts;
 utl::vector<id::generation_type>		generations;
-utl::deque<EntityID>					free_ids;
+utl::deque<entity_id>					free_ids;
 
 } // anonymous namespace
 
-Entity create(entity_info info)
+entity create(entity_info info)
 {
 	assert(info.transform);
 	if (!info.transform) {
-		return Entity{};
+		return entity{};
 	}
 
-	EntityID id;
+	entity_id id;
 
 	if (free_ids.size() > id::min_deleted_elements)
 	{
 		id = free_ids.front();
 		assert(!is_alive(id));
 		free_ids.pop_front();
-		id = EntityID{ id::new_generation(id) };
+		id = entity_id{ id::new_generation(id) };
 		++generations[id::index(id)];
 	}
 	else 
 	{
-		id = EntityID{ (id::id_type)generations.size() };
+		id = entity_id{ (id::id_type)generations.size() };
 		generations.push_back(0);
 
 		//transforms.resize(generations.size());
@@ -42,7 +42,7 @@ Entity create(entity_info info)
 		scripts.emplace_back();
 	}
 	 
-	const Entity new_entity{ id };
+	const entity new_entity{ id };
 	const id::id_type index{ id::index(id) };
 
 	//Create transform component
@@ -50,7 +50,7 @@ Entity create(entity_info info)
 	transforms[index] = transform::create(*info.transform, new_entity);
 	if (!transforms[index].is_valid())
 	{
-		return Entity{};
+		return entity{};
 	}
 
 	//Create script component
@@ -64,7 +64,7 @@ Entity create(entity_info info)
 	return new_entity;
 }
 
-void remove(EntityID id)
+void remove(entity_id id)
 {
 	const id::id_type index{ id::index(id) };
 	assert(is_alive(id));
@@ -80,7 +80,7 @@ void remove(EntityID id)
 	free_ids.push_back(id);
 }
 
-bool is_alive(EntityID id)
+bool is_alive(entity_id id)
 {
 	assert(id::is_valid(id));
 	const id::id_type index{ id::index(id) };
@@ -89,14 +89,14 @@ bool is_alive(EntityID id)
 
 }
 
-transform::component Entity::transform() const
+transform::component entity::transform() const
 {
 	assert(is_alive(_id));
 	const id::id_type index{ id::index(_id) };
 	return transforms[index];
 }
 
-script::component Entity::script() const
+script::component entity::script() const
 {
 	assert(is_alive(_id));
 	const id::id_type index{ id::index(_id) };
