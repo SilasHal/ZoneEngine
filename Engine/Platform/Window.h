@@ -12,18 +12,18 @@ class Window
 public:
 	constexpr explicit Window(window_id id) : _id{ id } {};
 	constexpr explicit Window() : _id{ id::invalid_id } {};
-	constexpr window_id get_id() const { return _id; }
-	constexpr bool is_valid() const { return id::is_valid(_id); }
+	constexpr window_id getID() const { return _id; }
+	constexpr bool isValid() const { return id::is_valid(_id); }
 
-	void set_fullscreen(bool is_fullscreen) const;
-	void is_fullscreen() const;
+	void setFullscreen(bool is_fullscreen) const;
+	void isFullscreen() const;
 	void* handle() const;
-	void set_caption(const char* caption) const;
+	void setCaption(const char* caption) const;
 	const math::Vec4U size() const;
 	void resize(uint32 width, uint32 height) const;
 	const uint32 width() const;
 	const uint32 height() const;
-	bool is_closed() const;
+	bool isClosed() const;
 private:
 	window_id _id{ id::invalid_id };
 };
