@@ -18,7 +18,7 @@ struct WindowInitInfo
 {
 	window_proc			callback{ nullptr };
 	window_handle		parent{ nullptr };
-	const char*			caption{ nullptr };
+	const wchar_t*		caption{ nullptr };
 	int32				left{ 0 };
 	int32				top{ 0 };
 	int32				width{ 1920 };
