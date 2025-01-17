@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZoneEditor", "ZoneEditor\Zo
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine\Engine.vcxproj", "{CC266EB5-944E-4AE9-8953-47AE53E507BB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EngineTest", "EngineTest\EngineTest.vcxproj", "{C336AC22-0DBF-4B4E-9DE0-28391CEC0EBA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EngineDLL", "EngineDLL\EngineDLL.vcxproj", "{E1C59DCE-34D2-47D4-8A99-977D0A432823}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +25,14 @@ Global
 		{CC266EB5-944E-4AE9-8953-47AE53E507BB}.Debug|x64.Build.0 = Debug|x64
 		{CC266EB5-944E-4AE9-8953-47AE53E507BB}.Release|x64.ActiveCfg = Release|x64
 		{CC266EB5-944E-4AE9-8953-47AE53E507BB}.Release|x64.Build.0 = Release|x64
+		{C336AC22-0DBF-4B4E-9DE0-28391CEC0EBA}.Debug|x64.ActiveCfg = Debug|x64
+		{C336AC22-0DBF-4B4E-9DE0-28391CEC0EBA}.Debug|x64.Build.0 = Debug|x64
+		{C336AC22-0DBF-4B4E-9DE0-28391CEC0EBA}.Release|x64.ActiveCfg = Release|x64
+		{C336AC22-0DBF-4B4E-9DE0-28391CEC0EBA}.Release|x64.Build.0 = Release|x64
+		{E1C59DCE-34D2-47D4-8A99-977D0A432823}.Debug|x64.ActiveCfg = Debug|x64
+		{E1C59DCE-34D2-47D4-8A99-977D0A432823}.Debug|x64.Build.0 = Debug|x64
+		{E1C59DCE-34D2-47D4-8A99-977D0A432823}.Release|x64.ActiveCfg = Release|x64
+		{E1C59DCE-34D2-47D4-8A99-977D0A432823}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
