@@ -15,10 +15,10 @@ public:
 	constexpr window_id getID() const { return _id; }
 	constexpr bool isValid() const { return id::is_valid(_id); }
 
-	void setFullscreen(bool is_fullscreen) const;
-	void isFullscreen() const;
+	void setFullscreen(bool _isFullscreen) const;
+	bool isFullscreen() const;
 	void* handle() const;
-	void setCaption(const char* caption) const;
+	void setCaption(const wchar_t* caption) const;
 	const math::Vec4U size() const;
 	void resize(uint32 width, uint32 height) const;
 	const uint32 width() const;

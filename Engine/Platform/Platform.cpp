@@ -56,11 +56,107 @@ WindowInfo& getFromID(window_id id)
 	return windows[id];
 }
 
+WindowInfo& getFromHandle(window_handle handle) 
+{
+	const window_id id{ (id::id_type)GetWindowLongPtr(handle,GWLP_USERDATA) };
+	return getFromID(id);
+}
+
 LRESULT CALLBACK internal_window_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
+	WindowInfo* info{ nullptr };
+	switch (msg)
+	{
+	case WM_DESTROY:
+		getFromHandle(hwnd).isClosed = true;
+		break;
+	}
+
+
 	LONG_PTR long_ptr{ GetWindowLongPtr(hwnd, 0) };
 	return long_ptr ? ((window_proc)long_ptr)(hwnd, msg, wparam, lparam) : DefWindowProc(hwnd, msg, wparam, lparam);
 }
+
+void resizeWindow(const WindowInfo& info, const RECT& area)
+{
+	RECT windowRect{ area };
+	AdjustWindowRect(&windowRect, info.style, FALSE);
+
+	const int32 width{ windowRect.right - windowRect.left };
+	const int32 height{ windowRect.bottom - windowRect.top };
+
+	MoveWindow(info.hwnd, info.topLeft.x, info.topLeft.y, width, height, true);
+}
+
+void resizeWindow(window_id id, uint32 width, uint32 height)
+{
+	WindowInfo& info{ getFromID(id) };
+
+	//NOTE: We also resize while in fullscreen mode to support the case
+	//      when the user changed the screen resolution.
+	RECT& area{ info.isFullScreen ? info.fullScreenArea : info.clientArea };
+	area.bottom = area.top + height;
+	area.right = area.left + width;
+
+	resizeWindow(info, area);
+}
+
+void setWindowFullscreen(window_id id, bool isFullscreen)
+{
+	WindowInfo& info{ getFromID(id) };
+	if (info.isFullScreen != isFullscreen)
+	{
+		info.isFullScreen = isFullscreen;
+
+		if (isFullscreen)
+		{
+			GetClientRect(info.hwnd, &info.clientArea);
+			RECT rect;
+			GetWindowRect(info.hwnd, &rect);
+			info.topLeft.x = rect.left;
+			info.topLeft.y = rect.right;
+			info.style = 0;
+			SetWindowLongPtr(info.hwnd, GWL_STYLE, info.style);
+			ShowWindow(info.hwnd, SW_MAXIMIZE);
+		}
+		else
+		{
+			info.style = WS_VISIBLE | WS_OVERLAPPEDWINDOW;
+			SetWindowLongPtr(info.hwnd, GWL_STYLE, info.style);
+			resizeWindow(info, info.clientArea);
+			ShowWindow(info.hwnd, SW_SHOWNORMAL);
+		}
+	}
+}
+
+bool isWindowFullscreen(window_id id) 
+{
+	return getFromID(id).isFullScreen;
+}
+
+window_handle getWindowHandle(window_id id)
+{
+	return getFromID(id).hwnd;
+}
+
+void setWindowCaption(window_id id, const wchar_t* caption)
+{
+	WindowInfo& info{ getFromID(id) };
+	SetWindowText(info.hwnd, caption);
+}
+
+math::Vec4U getWindowSize(window_id id)
+{
+	WindowInfo& info{ getFromID(id) };
+	RECT area{ info.isFullScreen ? info.fullScreenArea : info.clientArea };
+	return{ (uint32)area.left,(uint32)area.top ,(uint32)area.right ,(uint32)area.bottom };
+}
+
+bool isWindowClose(window_id id) 
+{
+	return getFromID(id).isClosed;
+}
+
 }// anonymous namespace
 
 Window createWindow(const WindowInitInfo* const initInfo)
@@ -115,7 +211,8 @@ Window createWindow(const WindowInitInfo* const initInfo)
 
 	 if (info.hwnd)
 	 {
-		 window_id id{ addToWindows(info) };
+		 const window_id id{ addToWindows(info) };
+		 SetWindowLongPtr(info.hwnd, GWLP_USERDATA, (LONG_PTR)id);
 
 		 if (callback)
 		 {
@@ -138,6 +235,60 @@ void removeWindow(window_id id)
 
 #elif
 #error "Must implement at least one platform"
-#endif  
+#endif  //_WIN64
+
+void Window::setFullscreen(bool _isFullscreen) const
+{
+	assert(isValid());
+	setWindowFullscreen(_id, _isFullscreen);
+}
+
+bool Window::isFullscreen() const
+{
+	assert(isValid());
+	return isWindowFullscreen(_id);
+}
+
+void* Window::handle() const
+{
+	assert(isValid());
+	return getWindowHandle(_id);
+}
+
+void Window::setCaption(const wchar_t* caption) const
+{
+	assert(isValid());
+	setWindowCaption(_id, caption);
+}
+
+const math::Vec4U Window::size() const
+{
+	assert(isValid());
+	return getWindowSize(_id);
+}
+
+void Window::resize(uint32 width, uint32 height) const
+{
+	assert(isValid());
+	resizeWindow(_id, width, height);
+}
+
+const uint32 Window::width() const
+{
+	math::Vec4U s{ size() };
+	return s.z, s.x;
+}
+
+const uint32 Window::height() const
+{
+	math::Vec4U s{ size() };
+	return s.w - s.y;
+}
+
+bool Window::isClosed() const
+{
+	assert(isValid());
+	return isWindowClose(_id);
+}
 
 }
