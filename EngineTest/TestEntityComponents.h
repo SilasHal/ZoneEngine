@@ -11,7 +11,7 @@
 
 using namespace zone;
 
-class Engine_Test : public Test
+class EngineTest : public Test
 {
 public:
 	bool initialize() override

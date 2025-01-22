@@ -70,8 +70,30 @@ LRESULT CALLBACK internal_window_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM
 	case WM_DESTROY:
 		getFromHandle(hwnd).isClosed = true;
 		break;
+	case WM_EXITSIZEMOVE:
+		info = &getFromHandle(hwnd);
+		break;
+	case WM_SIZE:
+		if (wparam == SIZE_MAXIMIZED)
+		{
+			info = &getFromHandle(hwnd);
+		}
+		break;
+	case WM_SYSCOMMAND:
+		if (wparam == SC_RESTORE)
+		{
+			info = &getFromHandle(hwnd);
+		}
+		break;
+	default:
+		break;
 	}
 
+	if (info)
+	{
+		assert(info->hwnd);
+		GetClientRect(info->hwnd, info->isFullScreen ? &info->fullScreenArea : &info->clientArea);
+	}
 
 	LONG_PTR long_ptr{ GetWindowLongPtr(hwnd, 0) };
 	return long_ptr ? ((window_proc)long_ptr)(hwnd, msg, wparam, lparam) : DefWindowProc(hwnd, msg, wparam, lparam);
@@ -211,6 +233,7 @@ Window createWindow(const WindowInitInfo* const initInfo)
 
 	 if (info.hwnd)
 	 {
+		 SetLastError(0);
 		 const window_id id{ addToWindows(info) };
 		 SetWindowLongPtr(info.hwnd, GWLP_USERDATA, (LONG_PTR)id);
 
