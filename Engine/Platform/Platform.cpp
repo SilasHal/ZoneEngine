@@ -136,7 +136,7 @@ void setWindowFullscreen(window_id id, bool isFullscreen)
 			RECT rect;
 			GetWindowRect(info.hwnd, &rect);
 			info.topLeft.x = rect.left;
-			info.topLeft.y = rect.right;
+			info.topLeft.y = rect.top;
 			info.style = 0;
 			SetWindowLongPtr(info.hwnd, GWL_STYLE, info.style);
 			ShowWindow(info.hwnd, SW_MAXIMIZE);
