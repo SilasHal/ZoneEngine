@@ -6,7 +6,9 @@
         xmlns:local="clr-namespace:ZoneEditor"
         xmlns:editors="clr-namespace:ZoneEditor.Editors"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        Title="MainWindow" Height="1080" Width="1920">
+        Title="Zone Engine" Height="1080" Width="1920"
+        ResizeMode="CanResizeWithGrip"
+        Style="{StaticResource ZoneWindowStyle}">
     <Grid>
         <editors:WorldEditorView />
     </Grid>

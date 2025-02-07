@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
-using ZoneEditor.EngineAPIStructs;
 using ZoneEditor.Components;
+using ZoneEditor.GameProject;
+using ZoneEditor.EngineAPIStructs;
+using ZoneEditor.Utilities;
 
 namespace ZoneEditor.EngineAPIStructs
 {
@@ -17,9 +19,16 @@ namespace ZoneEditor.EngineAPIStructs
     }
 
     [StructLayout(LayoutKind.Sequential)]
+    class ScriptComponent
+    {
+        public IntPtr ScriptCreator;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
     class GameEntityDescriptor
     {
         public TransformComponent Transform = new TransformComponent();
+        public ScriptComponent Script = new ScriptComponent();
     }
 }
 
@@ -27,30 +36,60 @@ namespace ZoneEditor.DllWrappers
 {
     static class EngineAPI
     {
-        private const string _dllName = "EngineDll.dll";
+        private const string _engineDll = "EngineDll.dll";
 
-        [DllImport(_dllName)]
-        private static extern int CreateGameEntity(GameEntityDescriptor desc);
-        public static int CreateGameEntity(GameEntity entity)
+        [DllImport(_engineDll, CharSet = CharSet.Ansi)]
+        public static extern int LoadGameCodeDll(string dllPath);
+
+        [DllImport(_engineDll)]
+        public static extern int UnloadGameCodeDll();
+
+        [DllImport(_engineDll)]
+        public static extern IntPtr GetScriptCreator(string name);
+
+        [DllImport(_engineDll)]
+        [return: MarshalAs(UnmanagedType.SafeArray)]
+        public static extern string[] GetScriptNames();
+
+        internal static class EntityAPI
         {
-            GameEntityDescriptor desc = new GameEntityDescriptor();
-
-            //transform component
+            [DllImport(_engineDll)]
+            private static extern int CreateGameEntity(GameEntityDescriptor _descriptor);
+            public static int CreateGameEntity(GameEntity entity)
             {
-                var c = entity.GetComponent<Transform>();
-                desc.Transform.Position = c.Position;
-                desc.Transform.Rotation = c.Rotation;
-                desc.Transform.Scale = c.Scale;
+                GameEntityDescriptor _descriptor = new GameEntityDescriptor();
+
+                //transform component
+                {
+                    var _component = entity.GetComponent<Transform>();
+                    _descriptor.Transform.Position = _component.Position;
+                    _descriptor.Transform.Rotation = _component.Rotation;
+                    _descriptor.Transform.Scale = _component.Scale;
+                }
+                // script component
+                {
+                    var _component = entity.GetComponent<Script>();
+                    if (_component != null && Project.Current != null)
+                    {
+                        if (Project.Current.AvailableScripts.Contains(_component.Name))
+                        {
+                            _descriptor.Script.ScriptCreator = GetScriptCreator(_component.Name);
+                        }
+                        else
+                        {
+                            Logger.Log(MessageType.Error, $"Unable to find script with name {_component.Name}. Game entity will be created without script component!");
+                        }
+                    }
+                }
+                return CreateGameEntity(_descriptor);
             }
 
-            return CreateGameEntity(desc);
-        }
-
-        [DllImport(_dllName)]
-        private static extern void RemoveGameEntity(int id);
-        public static void RemoveGameEntity(GameEntity entity)
-        {
-            RemoveGameEntity(entity.EntityId);
+            [DllImport(_engineDll)]
+            private static extern void RemoveGameEntity(int id);
+            public static void RemoveGameEntity(GameEntity entity)
+            {
+                RemoveGameEntity(entity.EntityId);
+            }
         }
     }
 }

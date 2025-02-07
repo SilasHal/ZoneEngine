@@ -22,9 +22,7 @@ namespace ZoneEditor.Utilities
         public string Name { get; }
 
         public void Redo() => _redoAction();
-
         public void Undo() => _undoAction();
-
         public UndoRedoAction(string name)
         {
             Name = name;

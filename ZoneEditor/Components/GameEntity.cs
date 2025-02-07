@@ -17,9 +17,12 @@ namespace ZoneEditor.Components
 {
     [DataContract]
     [KnownType(typeof(Transform))]
+    [KnownType(typeof(Script))]
     class GameEntity : ViewModelBase
     {
+
         private int _entityId = ID.INVALID_ID;
+
         public int EntityId
         {
             get => _entityId;
@@ -33,30 +36,31 @@ namespace ZoneEditor.Components
             }
         }
 
-        public bool _isActive;
+
+        private bool _isActive;
+
         public bool IsActive
         {
             get => _isActive;
             set
             {
                 if (_isActive != value)
-                { 
+                {
                     _isActive = value;
-                    if (_isActive)
+                    if (IsActive)
                     {
-                        EntityId = EngineAPI.CreateGameEntity(this);
+                        EntityId = EngineAPI.EntityAPI.CreateGameEntity(this);
                         Debug.Assert(ID.IsValid(_entityId));
                     }
-                    else
+                    else if (ID.IsValid(EntityId))
                     {
-                        EngineAPI.RemoveGameEntity(this);
+                        EngineAPI.EntityAPI.RemoveGameEntity(this);
+                        EntityId = ID.INVALID_ID;
                     }
-
                     OnPropertyChanged(nameof(IsActive));
                 }
             }
         }
-
 
         private bool _isEnabled = true;
         [DataMember]
@@ -73,36 +77,61 @@ namespace ZoneEditor.Components
             }
         }
 
-
-        public string _name;
+        private string _name;
         [DataMember]
         public string Name
         {
             get => _name;
             set
             {
-                if (_name != value) 
+                if (_name != value)
                 {
                     _name = value;
                     OnPropertyChanged(nameof(Name));
                 }
             }
         }
-
         [DataMember]
         public Scene ParentScene { get; private set; }
 
-        [DataMember(Name =nameof(Components))]
+        [DataMember(Name = nameof(Components))]
         private readonly ObservableCollection<Component> _components = new ObservableCollection<Component>();
         public ReadOnlyObservableCollection<Component> Components { get; private set; }
 
-        public Component GetComponent(Type type) => Components.FirstOrDefault(c => c.GetType() == type);
+        public Component GetComponent(Type type) => Components.FirstOrDefault(_component => _component.GetType() == type);
         public T GetComponent<T>() where T : Component => GetComponent(typeof(T)) as T;
+
+        public bool AddComponent(Component component)
+        {
+            Debug.Assert(component != null);
+            if (!Components.Any(x => x.GetType() == component.GetType()))
+            {
+                IsActive = false;
+                _components.Add(component);
+                IsActive = true;
+                return true;
+            }
+            Logger.Log(MessageType.Warning, $"Entity {Name} already has a {component.GetType().Name} component");
+            return false;
+        }
+
+        public void RemoveComponent(Component component)
+        {
+            Debug.Assert(component != null);
+            if (component is Transform) return;
+
+            if (_components.Contains(component))
+            {
+                IsActive = false;
+                _components.Remove(component);
+                IsActive = true;
+            }
+        }
 
         [OnDeserialized]
         void OnDeserialized(StreamingContext context)
         {
-            if(_components != null)
+            if (_components != null)
             {
                 Components = new ReadOnlyObservableCollection<Component>(_components);
                 OnPropertyChanged(nameof(Components));
@@ -117,12 +146,11 @@ namespace ZoneEditor.Components
             OnDeserialized(new StreamingContext());
         }
     }
-
     abstract class MSEntity : ViewModelBase
     {
-        // Enables updates to selected entities
         private bool _enableUpdates = true;
         private bool? _isEnabled;
+
         public bool? IsEnabled
         {
             get => _isEnabled;
@@ -136,7 +164,8 @@ namespace ZoneEditor.Components
             }
         }
 
-        public string _name;
+        private string _name;
+
         public string Name
         {
             get => _name;
@@ -153,45 +182,45 @@ namespace ZoneEditor.Components
         private readonly ObservableCollection<IMSComponent> _components = new ObservableCollection<IMSComponent>();
         public ReadOnlyObservableCollection<IMSComponent> Components { get; }
 
+        public T GetMSComponent<T>() where T : IMSComponent
+        {
+            return (T)Components.FirstOrDefault(x => x.GetType() == typeof(T));
+        }
         public List<GameEntity> SelectedEntities { get; }
 
-        public static float? GetMixedValue(List<GameEntity> entities, Func<GameEntity, float> getProperty)
+        private void MakeComponentList()
         {
-            var value = getProperty(entities.First());
-            foreach (var entity in entities.Skip(1))
+            _components.Clear();
+            var firstEntity = SelectedEntities.FirstOrDefault();
+            if (firstEntity == null) return;
+
+            foreach (var component in firstEntity.Components)
             {
-                if(!value.IsTheSameAs(getProperty(entity)))
+                var type = component.GetType();
+                if (!SelectedEntities.Skip(1).Any(entity => entity.GetComponent(type) == null))
                 {
-                    return null;
+                    Debug.Assert(Components.FirstOrDefault(x => x.GetType() == type) == null);
+                    _components.Add(component.GetMultiselectionComponent(this));
                 }
             }
-            return value;
         }
 
-        public static bool? GetMixedValue(List<GameEntity> entities, Func<GameEntity, bool> getProperty)
+        public static float? GetMixedValue<T>(List<T> objects, Func<T, float> getProperty)
         {
-            var value = getProperty(entities.First());
-            foreach (var entity in entities.Skip(1))
-            {
-                if (value != getProperty(entity))
-                {
-                    return null;
-                }
-            }
-            return value;
+            var value = getProperty(objects.First());
+            return objects.Skip(1).Any(x => !getProperty(x).IsTheSameAs(value)) ? (float?)null : value;
         }
 
-        public static string? GetMixedValue(List<GameEntity> entities, Func<GameEntity, string> getProperty)
+        public static bool? GetMixedValue<T>(List<T> objects, Func<T, bool> getProperty)
         {
-            var value = getProperty(entities.First());
-            foreach (var entity in entities.Skip(1))
-            {
-                if (value != getProperty(entity))
-                {
-                    return null;
-                }
-            }
-            return value;
+            var value = getProperty(objects.First());
+            return objects.Skip(1).Any(x => value != getProperty(x)) ? (bool?)null : value;
+        }
+
+        public static string? GetMixedValue<T>(List<T> objects, Func<T, string> getProperty)
+        {
+            var value = getProperty(objects.First());
+            return objects.Skip(1).Any(x => value != getProperty(x)) ? null : value;
         }
 
         protected virtual bool UpdateGameEntities(string propertyName)
@@ -216,15 +245,18 @@ namespace ZoneEditor.Components
         {
             _enableUpdates = false;
             UpdateMSGameEntity();
+            MakeComponentList();
             _enableUpdates = true;
         }
 
-        protected MSEntity(List<GameEntity> entities)
+
+
+        public MSEntity(List<GameEntity> entities)
         {
             Debug.Assert(entities.Any() == true);
             Components = new ReadOnlyObservableCollection<IMSComponent>(_components);
             SelectedEntities = entities;
-            PropertyChanged += (s, e) => { if(_enableUpdates) UpdateGameEntities(e.PropertyName); };
+            PropertyChanged += (s, e) => { if (_enableUpdates) UpdateGameEntities(e.PropertyName); };
         }
     }
 
@@ -235,4 +267,5 @@ namespace ZoneEditor.Components
             Refresh();
         }
     }
+
 }

@@ -21,7 +21,6 @@ namespace ZoneEditor.Utilities
 			}
 			catch (Exception e)
 			{
-
 				Debug.WriteLine(e.Message);
 				Logger.Log(MessageType.Error, $"Failed to serialize {instance} to {path}");
 				throw;
