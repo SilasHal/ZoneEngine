@@ -19,10 +19,10 @@ public:
 	bool isFullscreen() const;
 	void* handle() const;
 	void setCaption(const wchar_t* caption) const;
-	const math::Vec4U size() const;
+	math::Vec4U size() const;
 	void resize(uint32 width, uint32 height) const;
-	const uint32 width() const;
-	const uint32 height() const;
+	uint32 width() const;
+	uint32 height() const;
 	bool isClosed() const;
 private:
 	window_id _id{ id::invalid_id };

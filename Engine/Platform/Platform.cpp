@@ -205,16 +205,20 @@ Window createWindow(const WindowInitInfo* const initInfo)
 	// Register the window class
 	RegisterClassEx(&wc);
 	WindowInfo info{};
-	RECT rc{ info.clientArea };
+
+	info.clientArea.right = (initInfo && initInfo->width) ? info.clientArea.left + initInfo->width : info.clientArea.right;
+	info.clientArea.bottom = (initInfo && initInfo->height) ? info.clientArea.top + initInfo->height : info.clientArea.bottom;
+
+	RECT rect{ info.clientArea };
 
 	// adjust the window size for correct device size
-	AdjustWindowRect(&rc, info.style, FALSE);
+	AdjustWindowRect(&rect, info.style, FALSE);
 
 	const wchar_t* caption{ (initInfo && initInfo->caption) ? initInfo->caption : L"Zone Game" };
-	const int32 left{ (initInfo && initInfo->left) ? initInfo->left : info.clientArea.left };
-	const int32 top{ (initInfo && initInfo->top) ? initInfo->top : info.clientArea.top };
-	const int32 width{ (initInfo && initInfo->width) ? initInfo->width : rc.right - rc.left };
-	const int32 height{ (initInfo && initInfo->height) ? initInfo->height : rc.bottom - rc.top };
+	const int32 left{ initInfo ? initInfo->left : info.clientArea.left };
+	const int32 top{ initInfo ? initInfo->top : info.clientArea.top };
+	const int32 width{ rect.left - rect.right };
+	const int32 height{ rect.top - rect.bottom };
 
 	info.style |= parent ? WS_CHILD : WS_OVERLAPPEDWINDOW;
 	// Create an instance of the window class
