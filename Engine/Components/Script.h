@@ -1,15 +1,13 @@
 #pragma once
 #include "ComponentsCommon.h"
 
-namespace zone::transform {
-
+namespace zone::script {
 	struct init_info
 	{
-		float position[3]{};
-		float rotation[4]{};
-		float scale[3]{ 1.f,1.f,1.f };
+		detail::script_creator script_creator;
 	};
 
 	component create(init_info info, game_entity::entity entity);
 	void remove(component _component);
+	void update(float deltaTime);
 }

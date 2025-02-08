@@ -1,27 +1,39 @@
 #pragma once
-
 #define USE_STL_VECTOR 1
 #define USE_STL_DEQUE 1
 
 #if USE_STL_VECTOR
-#include <vector>
+#include<vector>
+#include <algorithm>
 namespace zone::utl {
-template<typename T>
-using vector = std::vector<T>;
+	template<typename T>
+	using vector = std::vector<T>;
+
+	template<typename T>
+	void erase_unordered(std::vector<T>& vec, size_t index)
+	{
+		if (vec.size() > 1)
+		{
+			std::iter_swap(vec.begin() + index, vec.end() - 1);
+			vec.pop_back();
+		}
+		else
+		{
+			vec.clear();
+		}
+	}
+
 }
 #endif
 
 #if USE_STL_DEQUE
-#include <deque>
+#include<deque>
 namespace zone::utl {
-template<typename T>
-using deque = std::deque<T>;
+	template<typename T>
+	using deque = std::deque<T>;
 }
 #endif
 
-
 namespace zone::utl {
-
-// TODO: implement our own containers
 
 }

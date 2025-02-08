@@ -13,24 +13,25 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ZoneEditor.GameDev;
 using ZoneEditor.GameProject;
 
 namespace ZoneEditor.Editors
 {
     /// <summary>
-    /// WorldEditorView.xaml 的交互逻辑
+    /// Interaction logic for WorldEditorView.xaml
     /// </summary>
     public partial class WorldEditorView : UserControl
     {
         public WorldEditorView()
         {
             InitializeComponent();
-            Loaded += OnworldEditorViewLoad;
+            Loaded += OnWorldEditorViewLoaded;
         }
 
-        private void OnworldEditorViewLoad(object sender, RoutedEventArgs e)
+        private void OnWorldEditorViewLoaded(object sender, RoutedEventArgs e)
         {
-            Loaded -= OnworldEditorViewLoad;
+            Loaded -= OnWorldEditorViewLoaded;
             Focus();
         }
 

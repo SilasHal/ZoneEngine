@@ -1,26 +1,24 @@
 #include "Transform.h"
 #include "Entity.h"
 
-namespace zone::transform
-{
+namespace zone::transform {
+
 	namespace {
+		utl::vector<math::Vec3F> positions;
+		utl::vector<math::Vec4F> rotations;
+		utl::vector<math::Vec3F> scales;
+	} // anonymous namespace
 
-		utl::vector<math::v3> positions;
-		utl::vector<math::v4> rotations;
-		utl::vector<math::v3> scales;
-
-	} //anonymous namespace
-
-	component create_transform(const init_info& info, game_entity::entity entity)
+	component create(init_info info, game_entity::entity entity)
 	{
 		assert(entity.is_valid());
 		const id::id_type entity_index{ id::index(entity.get_id()) };
 
 		if (positions.size() > entity_index)
 		{
-			rotations[entity_index] = math::v4(info.rotation);
-			positions[entity_index] = math::v3(info.position);
-			scales[entity_index] = math::v3(info.scale);
+			positions[entity_index] = math::Vec3F(info.position);
+			rotations[entity_index] = math::Vec4F(info.rotation);
+			scales[entity_index] = math::Vec3F(info.scale);
 		}
 		else
 		{
@@ -33,24 +31,24 @@ namespace zone::transform
 		return component(transform_id{ (id::id_type)positions.size() - 1 });
 	}
 
-	void remove_transform(component c)
+
+
+	void remove(component _component)
 	{
-		assert(c.is_valid());
+		assert(_component.is_valid());
 	}
-	
-	math::v4 component::rotation() const
-	{
-		assert(is_valid());
-		return rotations[id::index(_id)];
-	}
-	
-	math::v3 component::position() const
+
+	math::Vec3F component::position() const
 	{
 		assert(is_valid());
 		return positions[id::index(_id)];
 	}
-	
-	math::v3 component::scale() const
+	math::Vec4F component::rotation() const
+	{
+		assert(is_valid());
+		return rotations[id::index(_id)];
+	}
+	math::Vec3F component::scale() const
 	{
 		assert(is_valid());
 		return scales[id::index(_id)];

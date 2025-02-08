@@ -1,17 +1,27 @@
 #pragma once
+#pragma warning(disable:4530)
 
-#pragma warning(disable: 4530) // disable exception warning
-
-// C/C++
+//C/C++ Headers
 #include <stdint.h>
 #include <assert.h>
 #include <typeinfo>
+#include <memory>
+#include <unordered_map>
+#include <string>
 
-#if defined(_WIN64)
-#include <DirectXMath.h>
-#endif
+#ifdef _WIN64
+#include<DirectXMath.h>
+#endif // _Win64
 
-//common headers
+
+//Common Headers
+#include "ZoneTypes.h"
 #include "..\Utilities\Utilities.h"
 #include "..\Utilities\MathTypes.h"
-#include "ZoneTypes.h"
+#include "Id.h"
+
+#ifdef _DEBUG
+#define DEBUG_OP(x) x
+#else
+#define DEBUG_OP(x) (void(0))
+#endif
