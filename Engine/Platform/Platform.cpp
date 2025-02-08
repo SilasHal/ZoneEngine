@@ -137,13 +137,11 @@ void setWindowFullscreen(window_id id, bool isFullscreen)
 			GetWindowRect(info.hwnd, &rect);
 			info.topLeft.x = rect.left;
 			info.topLeft.y = rect.top;
-			info.style = 0;
-			SetWindowLongPtr(info.hwnd, GWL_STYLE, info.style);
+			SetWindowLongPtr(info.hwnd, GWL_STYLE, 0);
 			ShowWindow(info.hwnd, SW_MAXIMIZE);
 		}
 		else
 		{
-			info.style = WS_VISIBLE | WS_OVERLAPPEDWINDOW;
 			SetWindowLongPtr(info.hwnd, GWL_STYLE, info.style);
 			resizeWindow(info, info.clientArea);
 			ShowWindow(info.hwnd, SW_SHOWNORMAL);
@@ -170,7 +168,7 @@ void setWindowCaption(window_id id, const wchar_t* caption)
 math::Vec4U getWindowSize(window_id id)
 {
 	WindowInfo& info{ getFromID(id) };
-	RECT area{ info.isFullScreen ? info.fullScreenArea : info.clientArea };
+	RECT& area{ info.isFullScreen ? info.fullScreenArea : info.clientArea };
 	return{ (uint32)area.left,(uint32)area.top ,(uint32)area.right ,(uint32)area.bottom };
 }
 
@@ -208,6 +206,7 @@ Window createWindow(const WindowInitInfo* const initInfo)
 
 	info.clientArea.right = (initInfo && initInfo->width) ? info.clientArea.left + initInfo->width : info.clientArea.right;
 	info.clientArea.bottom = (initInfo && initInfo->height) ? info.clientArea.top + initInfo->height : info.clientArea.bottom;
+	info.style |= parent ? WS_CHILD : WS_OVERLAPPEDWINDOW;
 
 	RECT rect{ info.clientArea };
 
@@ -215,12 +214,11 @@ Window createWindow(const WindowInitInfo* const initInfo)
 	AdjustWindowRect(&rect, info.style, FALSE);
 
 	const wchar_t* caption{ (initInfo && initInfo->caption) ? initInfo->caption : L"Zone Game" };
-	const int32 left{ initInfo ? initInfo->left : info.clientArea.left };
-	const int32 top{ initInfo ? initInfo->top : info.clientArea.top };
-	const int32 width{ rect.left - rect.right };
-	const int32 height{ rect.top - rect.bottom };
+	const int32 left{ initInfo ? initInfo->left : info.topLeft.x };
+	const int32 top{ initInfo ? initInfo->top : info.topLeft.y };
+	const int32 width{ rect.right - rect.left };
+	const int32 height{ rect.bottom - rect.top };
 
-	info.style |= parent ? WS_CHILD : WS_OVERLAPPEDWINDOW;
 	// Create an instance of the window class
 	 info.hwnd = CreateWindowEx(
 		0,					// extended style
@@ -237,7 +235,7 @@ Window createWindow(const WindowInitInfo* const initInfo)
 
 	 if (info.hwnd)
 	 {
-		 SetLastError(0);
+		 DEBUG_OP(SetLastError(0));
 		 const window_id id{ addToWindows(info) };
 		 SetWindowLongPtr(info.hwnd, GWLP_USERDATA, (LONG_PTR)id);
 
@@ -259,10 +257,9 @@ void removeWindow(window_id id)
 	DestroyWindow(info.hwnd);
 	removeFromWindows(id);
 }
-
-#elif
+#else
 #error "Must implement at least one platform"
-#endif  //_WIN64
+#endif 
 
 void Window::setFullscreen(bool _isFullscreen) const
 {
@@ -288,7 +285,7 @@ void Window::setCaption(const wchar_t* caption) const
 	setWindowCaption(_id, caption);
 }
 
-const math::Vec4U Window::size() const
+math::Vec4U Window::size() const
 {
 	assert(isValid());
 	return getWindowSize(_id);
@@ -300,13 +297,13 @@ void Window::resize(uint32 width, uint32 height) const
 	resizeWindow(_id, width, height);
 }
 
-const uint32 Window::width() const
+uint32 Window::width() const
 {
 	math::Vec4U s{ size() };
 	return s.z, s.x;
 }
 
-const uint32 Window::height() const
+uint32 Window::height() const
 {
 	math::Vec4U s{ size() };
 	return s.w - s.y;
