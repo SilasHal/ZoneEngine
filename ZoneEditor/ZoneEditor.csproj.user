@@ -16,7 +16,7 @@
     <Compile Update="Editors\WorldEditor\ProjectLayoutView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-	<Compile Update="Editors\WorldEditor\ScriptView.xaml.cs">
+    <Compile Update="Editors\WorldEditor\ScriptView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Editors\WorldEditor\TransformView.xaml.cs">
@@ -41,6 +41,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Utilities\LoggerView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Utilities\RenderSurface\RenderSurfaceView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Utilities\UndoRedoView.xaml.cs">
@@ -91,6 +94,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Utilities\LoggerView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Utilities\RenderSurface\RenderSurfaceView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Utilities\UndoRedoView.xaml">
