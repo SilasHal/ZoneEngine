@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -20,9 +21,15 @@ namespace ZoneEditor.Utilities
     /// </summary>
     public partial class RenderSurfaceView : UserControl, IDisposable
     {
-        private RenderSurfaceHost _host = null;
-        private bool disposedValue;
+        private enum Win32Msg
+        {
+            WM_SIZE = 0x0005,
+            WM_SIZING = 0x0214,
+            WM_ENTERSIZEMOVE = 0x0231,
+            WM_EXITSIZEMOVE = 0x0232
+        }
 
+        private RenderSurfaceHost _host = null;
         public RenderSurfaceView()
         {
             InitializeComponent();
@@ -33,20 +40,40 @@ namespace ZoneEditor.Utilities
         {
             Loaded -= OnRenderSurfaceViewLoaded;
             _host = new RenderSurfaceHost(ActualWidth,ActualHeight);
+            _host.MessageHook += new HwndSourceHook(HostMsgFilter);
             Content = _host;
+        }
+
+        private nint HostMsgFilter(nint hwnd, int msg, nint wParam, nint lParam, ref bool handled)
+        {
+            switch ((Win32Msg)msg) 
+            {
+                case Win32Msg.WM_SIZE:
+                    _host.Resize();
+                    break;
+                case Win32Msg.WM_SIZING:
+                    throw new Exception();
+                case Win32Msg.WM_ENTERSIZEMOVE:
+                    throw new Exception();
+                case Win32Msg.WM_EXITSIZEMOVE:
+                    throw new Exception();
+                default:
+                    break;
+            }
+            return IntPtr.Zero;
         }
 
         #region IDisposable support
         private bool _disposedValue;
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!_disposedValue)
             {
                 if (disposing)
                 {
                    _host.Dispose();
                 }
-                disposedValue = true;
+                _disposedValue = true;
             }
         }
 

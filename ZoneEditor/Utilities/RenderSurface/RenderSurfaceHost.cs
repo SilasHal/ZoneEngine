@@ -18,6 +18,11 @@ namespace ZoneEditor.Utilities
 
         public int SurfaceID { get; private set; } = ID.INVALID_ID;
 
+        public void Resize()
+        {
+            Logger.Log(MessageType.Info, "Resizing RenderSurfaceHost");
+        }
+
         public RenderSurfaceHost(double width, double height)
         {
             _width = (int)width;
