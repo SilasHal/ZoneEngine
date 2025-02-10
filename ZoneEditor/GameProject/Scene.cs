@@ -14,7 +14,7 @@ using ZoneEditor.Utilities;
 namespace ZoneEditor.GameProject
 {
     [DataContract]
-    class Scene :ViewModelBase
+    class Scene : ViewModelBase
     {
         private bool _isActive;
         [DataMember]
@@ -48,8 +48,8 @@ namespace ZoneEditor.GameProject
         [DataMember]
         public Project Project { get; private set; }
 
-        [DataMember(Name =nameof(GameEntities))]
-        private ObservableCollection<GameEntity> _gameEntities = new ObservableCollection<GameEntity>();
+        [DataMember(Name = nameof(GameEntities))]
+        private readonly ObservableCollection<GameEntity> _gameEntities = new ObservableCollection<GameEntity>();
         public ReadOnlyObservableCollection<GameEntity> GameEntities { get; private set; }
 
         public ICommand AddGameEntityCommand { get; private set; }
@@ -67,12 +67,13 @@ namespace ZoneEditor.GameProject
             {
                 _gameEntities.Insert(index, entity);
             }
+
         }
 
         private void RemoveGameEntity(GameEntity entity)
         {
             Debug.Assert(_gameEntities.Contains(entity));
-            entity._isActive = false;
+            entity.IsActive = false;
             _gameEntities.Remove(entity);
         }
 
@@ -110,10 +111,12 @@ namespace ZoneEditor.GameProject
                     () => RemoveGameEntity(x),
                     $"Remove {x.Name}"));
             });
+
         }
 
-        public Scene(Project project, string name) 
-        { 
+
+        public Scene(Project project, string name)
+        {
             Debug.Assert(project != null);
             Project = project;
             Name = name;

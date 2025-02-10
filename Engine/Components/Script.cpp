@@ -12,7 +12,7 @@ namespace zone::script {
 
 		using script_registry = std::unordered_map<size_t, detail::script_creator>;
 
-		script_registry& registery()
+		script_registry& registry()
 		{
 			// NOTE:  we put this static variable in a function because of
 			//        the initialization order of static data. This way, we 
@@ -45,15 +45,15 @@ namespace zone::script {
 	namespace detail {
 		uint8 register_script(size_t tag, script_creator func)
 		{
-			bool result{ registery().insert(script_registry::value_type{tag, func}).second };
+			bool result{ registry().insert(script_registry::value_type{tag, func}).second };
 			assert(result);
 			return result;
 		}
 
 		script_creator get_script_creator(size_t tag)
 		{
-			const auto script{ registery().find(tag) };
-			assert(script != registery().end() && script->first == tag);
+			const auto script{ registry().find(tag) };
+			assert(script != registry().end() && script->first == tag);
 			return script->second;
 		}
 
