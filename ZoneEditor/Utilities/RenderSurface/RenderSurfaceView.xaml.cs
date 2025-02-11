@@ -42,6 +42,33 @@ namespace ZoneEditor.Utilities
             _host = new RenderSurfaceHost(ActualWidth,ActualHeight);
             _host.MessageHook += new HwndSourceHook(HostMsgFilter);
             Content = _host;
+
+            var window = Application.Current.MainWindow;
+
+            var helper = new WindowInteropHelper(window);
+            if(helper.Handle != null)
+            {
+                HwndSource.FromHwnd(helper.Handle)?.AddHook(HwndMessageHook);
+            }
+        }
+
+        private nint HwndMessageHook(nint hwnd, int msg, nint wParam, nint lParam, ref bool handled)
+        {
+            switch ((Win32Msg)msg)
+            {
+                case Win32Msg.WM_SIZE:
+                    _host.Resize();
+                    break;
+                case Win32Msg.WM_SIZING:
+                    throw new Exception();
+                case Win32Msg.WM_ENTERSIZEMOVE:
+                    throw new Exception();
+                case Win32Msg.WM_EXITSIZEMOVE:
+                    throw new Exception();
+                default:
+                    break;
+            }
+            return IntPtr.Zero;
         }
 
         private nint HostMsgFilter(nint hwnd, int msg, nint wParam, nint lParam, ref bool handled)
