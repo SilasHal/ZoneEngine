@@ -1,6 +1,7 @@
 #include "Script.h"
 #include "Entity.h"
 
+
 namespace zone::script {
 	namespace {
 		utl::vector<detail::script_ptr>			entity_scripts;
@@ -120,6 +121,7 @@ namespace zone::script {
 
 #ifdef USE_WITH_EDITOR
 #include <atlsafe.h>
+
 
 extern "C" __declspec(dllexport) LPSAFEARRAY get_script_names()
 {
