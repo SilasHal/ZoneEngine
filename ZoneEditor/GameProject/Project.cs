@@ -168,6 +168,16 @@ namespace ZoneEditor.GameProject
             return Serializer.FromFile<Project>(file);
         }
 
+        private void UnloadGameCodeDll()
+        {
+            ActiveScene.GameEntities.Where(x => x.GetComponent<Script>() != null).ToList().ForEach(x => x.IsActive = false);
+            if (EngineAPI.UnloadGameCodeDll() != 0)
+            {
+                Logger.Log(MessageType.Info, $"Game Code DLL unloaded successfully");
+                AvailableScripts = null;
+            }
+        }
+
         public void Unload()
         {
             UnloadGameCodeDll();
@@ -232,15 +242,7 @@ namespace ZoneEditor.GameProject
             }
         }
 
-        private void UnloadGameCodeDll()
-        {
-            ActiveScene.GameEntities.Where(x => x.GetComponent<Script>() != null).ToList().ForEach(x => x.IsActive = false);
-            if (EngineAPI.UnloadGameCodeDll() != 0)
-            {
-                Logger.Log(MessageType.Info, $"Game Code DLL unloaded successfully");
-                AvailableScripts = null;
-            }
-        }
+
 
         private async Task BuildGameCodeDll(bool showWindow = true)
         {

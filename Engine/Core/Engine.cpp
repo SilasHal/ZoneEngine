@@ -18,7 +18,7 @@ namespace {
 		{
 		case WM_DESTROY:
 		{
-			if (gameWindow.window.isClosed());
+			if (gameWindow.window.isClosed())
 			{
 				PostQuitMessage(0);
 				return 0;
