@@ -74,6 +74,13 @@ EDITOR_INTERFACE uint32 CreateRenderSurface(HWND host, int32 width, int32 height
 	return (uint32)surfaces.size() - 1;
 }
 
+EDITOR_INTERFACE void ResizeRenderSurface(uint32 id)
+{
+	assert(id < surfaces.size());
+	surfaces[id].window.resize(0, 0);
+}
+
+
 EDITOR_INTERFACE void RemoveRenderSurface(uint32 id)
 {
 	assert(id < surfaces.size());

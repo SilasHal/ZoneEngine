@@ -54,6 +54,8 @@ namespace ZoneEditor.DllWrappers
         [DllImport(_engineDll)]
         public static extern int CreateRenderSurface(IntPtr host, int width, int height);
         [DllImport(_engineDll)]
+        public static extern void ResizeRenderSurface(int sutfaceID);
+        [DllImport(_engineDll)]
         public static extern void RemoveRenderSurface(int sutfaceID);
         [DllImport(_engineDll)]
         public static extern IntPtr GetWindowHandle(int sutfaceID);

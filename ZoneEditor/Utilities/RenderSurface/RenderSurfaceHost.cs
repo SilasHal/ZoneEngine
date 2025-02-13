@@ -25,11 +25,12 @@ namespace ZoneEditor.Utilities
             _resizeTimer.Trigger();
         }
 
-        private void Resize(object? sender, DelayEventTimerArgs e)
+        private void Resize(object sender, DelayEventTimerArgs e)
         {
             e.RepeatEvent = Mouse.LeftButton == MouseButtonState.Pressed;
             if (!e.RepeatEvent)
             {
+                EngineAPI.ResizeRenderSurface(SurfaceID);
                 Logger.Log(MessageType.Info, "Resized");
             }
         }

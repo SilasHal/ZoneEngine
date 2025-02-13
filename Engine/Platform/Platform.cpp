@@ -114,13 +114,19 @@ void resizeWindow(window_id id, uint32 width, uint32 height)
 {
 	WindowInfo& info{ getFromID(id) };
 
-	//NOTE: We also resize while in fullscreen mode to support the case
-	//      when the user changed the screen resolution.
-	RECT& area{ info.isFullScreen ? info.fullScreenArea : info.clientArea };
-	area.bottom = area.top + height;
-	area.right = area.left + width;
+	if (info.style & WS_CHILD)
+	{
+		GetClientRect(info.hwnd, &info.clientArea);
+	}
+	else{
+		//NOTE: We also resize while in fullscreen mode to support the case
+		//      when the user changed the screen resolution.
+		RECT& area{ info.isFullScreen ? info.fullScreenArea : info.clientArea };
+		area.bottom = area.top + height;
+		area.right = area.left + width;
 
-	resizeWindow(info, area);
+		resizeWindow(info, area);
+	}
 }
 
 void setWindowFullscreen(window_id id, bool isFullscreen)

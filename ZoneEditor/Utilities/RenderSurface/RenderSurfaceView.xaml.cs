@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,13 +24,16 @@ namespace ZoneEditor.Utilities
     {
         private enum Win32Msg
         {
-            WM_SIZE = 0x0005,
             WM_SIZING = 0x0214,
             WM_ENTERSIZEMOVE = 0x0231,
-            WM_EXITSIZEMOVE = 0x0232
+            WM_EXITSIZEMOVE = 0x0232,
+            WM_SIZE = 0x0005,
         }
 
         private RenderSurfaceHost _host = null;
+        private bool _canResize = true;
+        private bool _moved = false;
+
         public RenderSurfaceView()
         {
             InitializeComponent();
@@ -39,51 +43,62 @@ namespace ZoneEditor.Utilities
         private void OnRenderSurfaceViewLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnRenderSurfaceViewLoaded;
-            _host = new RenderSurfaceHost(ActualWidth,ActualHeight);
+
+            _host = new RenderSurfaceHost(ActualWidth, ActualHeight);
             _host.MessageHook += new HwndSourceHook(HostMsgFilter);
             Content = _host;
 
-            var window = Application.Current.MainWindow;
-
-            var helper = new WindowInteropHelper(window);
-            if(helper.Handle != null)
+            var window = this.FindVisualParent<Window>();
+            if (window != null)
             {
-                HwndSource.FromHwnd(helper.Handle)?.AddHook(HwndMessageHook);
+                var helper = new WindowInteropHelper(window);
+                if (helper.Handle != null)
+                {
+                    HwndSource.FromHwnd(helper.Handle)?.AddHook(HwndMessageHook);
+                }
             }
         }
 
-        private nint HwndMessageHook(nint hwnd, int msg, nint wParam, nint lParam, ref bool handled)
+        private IntPtr HwndMessageHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             switch ((Win32Msg)msg)
             {
-                case Win32Msg.WM_SIZE:
-                    _host.Resize();
-                    break;
                 case Win32Msg.WM_SIZING:
-                    throw new Exception();
+                    _canResize = false;
+                    _moved = false;
+                    break;
                 case Win32Msg.WM_ENTERSIZEMOVE:
-                    throw new Exception();
+                    _moved = true;
+                    break;
                 case Win32Msg.WM_EXITSIZEMOVE:
-                    throw new Exception();
+                    _canResize = true;
+                    if (!_moved)
+                    {
+                        _host.Resize();
+                    }
+                    break;
                 default:
                     break;
             }
             return IntPtr.Zero;
         }
 
-        private nint HostMsgFilter(nint hwnd, int msg, nint wParam, nint lParam, ref bool handled)
+        private IntPtr HostMsgFilter(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             switch ((Win32Msg)msg) 
             {
-                case Win32Msg.WM_SIZE:
-                    _host.Resize();
-                    break;
                 case Win32Msg.WM_SIZING:
                     throw new Exception();
                 case Win32Msg.WM_ENTERSIZEMOVE:
                     throw new Exception();
                 case Win32Msg.WM_EXITSIZEMOVE:
                     throw new Exception();
+                case Win32Msg.WM_SIZE:
+                    if (_canResize)
+                    {
+                        _host.Resize();
+                    }
+                    break;
                 default:
                     break;
             }
