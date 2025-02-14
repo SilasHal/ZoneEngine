@@ -15,7 +15,7 @@
 #ifdef _WIN64
 #include <Windows.h>
 
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) 
 {
 #if _DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
