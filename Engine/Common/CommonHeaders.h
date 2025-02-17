@@ -16,6 +16,8 @@
 
 //Common Headers
 #include "ZoneTypes.h"
+#include "..\Utilities\Math.h"
+#include "ZoneTypes.h"
 #include "..\Utilities\Utilities.h"
 #include "..\Utilities\MathTypes.h"
 #include "Id.h"

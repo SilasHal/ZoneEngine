@@ -1,0 +1,5 @@
+﻿  dllmain.cpp
+D:\WorkSpace\ZoneEngine\EngineDLL\dllmain.cpp(11,9): warning C4100: 'lpReserved': unreferenced formal parameter
+D:\WorkSpace\ZoneEngine\EngineDLL\dllmain.cpp(9,31): warning C4100: 'hModule': unreferenced formal parameter
+     Creating library D:\WorkSpace\ZoneEngine\x64\DebugEditor\EngineDLL.lib and object D:\WorkSpace\ZoneEngine\x64\DebugEditor\EngineDLL.exp
+  EngineDLL.vcxproj -> D:\WorkSpace\ZoneEngine\x64\DebugEditor\EngineDLL.dll
