@@ -6,9 +6,38 @@
 
 namespace zone::tools {
 
+struct Mesh
+{
+	//initial data
+	utl::vector<math::Vec3F>					positions;
+	utl::vector<math::Vec3F>					normals;
+	utl::vector<math::Vec3F>					tangents;
+	utl::vector<utl::vector<math::Vec2F>>		uvSets;
+
+	utl::vector<uint32>							rawIndices;
+};
+
+struct LodGroup
+{
+	std::string name;
+	std::vector<Mesh> Meshes;
+};
+
+struct Scene 
+{
+	std::string name;
+	std::vector<LodGroup> LodGroups;
+
+};
+
 struct GeometryImportSettings
 {
 	float smoothingAngle;
+	uint8 calculateNormals;
+	uint8 calculateTangents;
+	uint8 reverseHandedness;
+	uint8 importEmbededTextures;
+	uint8 importAnimations;
 };
 
 struct SceneData

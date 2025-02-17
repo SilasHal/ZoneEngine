@@ -18,7 +18,7 @@
     <ClInclude Include="ToolsCommon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
+    <ClInclude Include="PrimitiveMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Geometry.h">
@@ -26,7 +26,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Mesh.cpp">
+    <ClCompile Include="PrimitiveMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
