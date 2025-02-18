@@ -1,4 +1,4 @@
-#include "Mesh.h"
+#include "PrimitiveMesh.h"
 #include "Geometry.h"
 namespace zone::tools {
 	namespace {
@@ -43,27 +43,27 @@ namespace zone::tools {
 
 			const uint32 horizontalCount{ clamp(mesh->segments[horizontalIndex], 1u, 10u) };
 			const uint32 verticalCount{ clamp(mesh->segments[verticalIndex], 1u, 10u) };
-			const uint32 horizontalStep{ 1.f / horizontalCount };
-			const uint32 verticalStep{ 1.f / verticalCount };
+			const float horizontalStep{ 1.f / horizontalCount };
+			const float verticalStep{ 1.f / verticalCount };
 			const float uStep{ (uRange.y - uRange.x) / horizontalCount };
 			const float vStep{ (vRange.y - vRange.x) / verticalCount };
 
 			Mesh m{};
 			utl::vector<Vec2F> uvs{};
 			
-			for (uint32 i{ 0 }; i <= verticalCount; ++i)
+			for (uint32 j{ 0 }; j <= verticalCount; ++j)
 			{
-				for (uint32 j{ 0 }; j <= horizontalCount; ++j)
+				for (uint32 i{ 0 }; i <= horizontalCount; ++i)
 				{
 					Vec3F position{ offset };
 					float* const asArray{ &position.x };
-					asArray[horizontalIndex] += j * horizontalStep;
-					asArray[verticalIndex] += i * verticalStep;
+					asArray[horizontalIndex] += i * horizontalStep;
+					asArray[verticalIndex] += j * verticalStep;
 					m.positions.emplace_back(position.x * mesh->size.x, position.y * mesh->size.y, position.z * mesh->size.z);
 
 					Vec2F uv{ uRange.x, 1.f - vRange.x };
-					uv.x += j * uStep;
-					uv.y -= i * vStep;
+					uv.x += i * uStep;
+					uv.y -= j * vStep;
 					uvs.emplace_back(uv);
 				}
 			}
@@ -98,7 +98,14 @@ namespace zone::tools {
 			const uint32 numIndices{ 3 * 2 * horizontalCount * verticalCount };
 			assert(m.rawIndices.size() == numIndices);
 			
-			
+			m.uvSets.resize(1);
+
+			for (uint32 i{ 0 }; i < numIndices; ++i)
+			{
+				m.uvSets[0].emplace_back(uvs[m.rawIndices[i]]);
+			}
+
+			return m;
 		}
 
 		void CreatePlane(Scene& scene, const MeshInitInfo& mesh)
@@ -141,6 +148,8 @@ namespace zone::tools {
 		Scene scene{};
 		meshCreators[mesh->type](scene, *mesh);
 
-		//TODO: process scene and pack to be sent to the level editor.
-
+		data->settings.calculateNormals = 1;
+		ProcessScene(scene, data->settings);
+		PackData(scene, *data);
+	}
 }

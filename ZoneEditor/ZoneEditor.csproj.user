@@ -7,6 +7,9 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Content\PrimitiveMeshDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Editors\WorldEditor\ComponentView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
