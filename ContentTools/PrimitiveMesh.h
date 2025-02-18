@@ -20,7 +20,7 @@ struct PrimitivesInitInfo
 {
 	PrimitivesMeshType		type;
 	uint32					segments[3]{ 1, 1, 1 };
-	math::Vec3F				scale{ 1.0f, 1.0f, 1.0f };
+	math::Vec3F				size{ 1.0f, 1.0f, 1.0f };
 	uint32					lod{ 0 };
 };
 

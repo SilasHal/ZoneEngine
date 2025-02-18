@@ -27,7 +27,6 @@ struct Scene
 {
 	std::string name;
 	std::vector<LodGroup> LodGroups;
-
 };
 
 struct GeometryImportSettings
@@ -46,5 +45,8 @@ struct SceneData
 	uint8					bufferSize;
 	GeometryImportSettings	settings;
 };
+
+void processScene(Scene& scene, const GeometryImportSettings& settings);
+void packData(const Scene& scene, SceneData& data);
 
 }
