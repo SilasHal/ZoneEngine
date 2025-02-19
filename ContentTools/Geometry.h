@@ -6,15 +6,26 @@
 
 namespace zone::tools {
 
+struct Vertex
+{
+	math::Vec4F tangent{};
+	math::Vec3F position{};
+	math::Vec3F normal{};
+	math::Vec2F uvSets{};
+};
+
 struct Mesh
 {
 	//initial data
+	utl::vector<math::Vec4F>					tangents;
 	utl::vector<math::Vec3F>					positions;
 	utl::vector<math::Vec3F>					normals;
-	utl::vector<math::Vec3F>					tangents;
 	utl::vector<utl::vector<math::Vec2F>>		uvSets;
-
 	utl::vector<uint32>							rawIndices;
+
+	//Intermediate data
+	utl::vector<Vertex>							vertices;
+	utl::vector<uint32>							indices;
 };
 
 struct LodGroup

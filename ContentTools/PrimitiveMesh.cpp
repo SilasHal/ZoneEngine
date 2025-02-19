@@ -133,7 +133,7 @@ EDITOR_INTERFACE void CreatePrimitiveMesh(SceneData* data, PrimitivesInitInfo* i
 	creators[info->type](scene, *info);
 	
 	data->settings.calculateNormals = 1;
-	procesScene(scene, data->settings);
+	processScene(scene, data->settings);
 	packData(scene, *data);
 }
 
