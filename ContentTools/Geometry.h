@@ -6,12 +6,26 @@
 
 namespace zone::tools {
 
+namespace packedvertex {
+
+struct VertexStatic
+{
+	math::Vec3F		position;
+	uint8			reserved[3];
+	uint8			tSign;
+	uint16			normal[2];
+	uint16			tangent[2];
+	math::Vec2F		uv;
+};
+
+} // namespace packedvertex
+
 struct Vertex
 {
 	math::Vec4F tangent{};
 	math::Vec3F position{};
 	math::Vec3F normal{};
-	math::Vec2F uvSets{};
+	math::Vec2F uv{};
 };
 
 struct Mesh
@@ -26,6 +40,12 @@ struct Mesh
 	//Intermediate data
 	utl::vector<Vertex>							vertices;
 	utl::vector<uint32>							indices;
+
+	//Output data
+	std::string									name;
+	utl::vector<packedvertex::VertexStatic>		packedVerticesStatic;
+	float										lodThreshould{ -1.0f };
+	uint32										lodID{ uint32_invalid_id };
 };
 
 struct LodGroup

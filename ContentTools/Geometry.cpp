@@ -71,6 +71,7 @@ void processNormals(Mesh& mesh, float smoothingAngle)
 					XMVECTOR n2{ XMLoadFloat3(&mesh.normals[refs[k]]) };
 					if (!isSoftEdge)
 					{
+						// NOTE: cos(angle) = dot(n1, n2) / (||n1|| * ||n2||)
 						XMStoreFloat(&n, XMVector3Dot(n1, n2) * XMVector3ReciprocalLength(n1));
 					}
 
@@ -93,6 +94,62 @@ void processNormals(Mesh& mesh, float smoothingAngle)
 void processUVs(Mesh& mesh)
 {
 	utl::vector<Vertex> oldVertices;
+	oldVertices.swap(mesh.vertices);
+	utl::vector<uint32> oldIndices(mesh.indices.size());
+	oldIndices.swap(mesh.indices);
+
+	const uint32 numVertices{ static_cast<uint32>(oldVertices.size()) };
+	const uint32 numIndices{ static_cast<uint32>(oldIndices.size()) };
+	assert(numVertices && numIndices);
+
+	utl::vector<utl::vector<uint32>> idxRef(numVertices);
+	for (uint32 i{ 0 }; i < numIndices; ++i)
+	{
+		idxRef[oldIndices[i]].emplace_back(i);
+	}
+
+	for (uint32 i{ 0 }; i < numVertices; ++i)
+	{
+		auto& refs{ idxRef[i] };
+		uint32 numRefs{ static_cast<uint32>(refs.size()) };
+		for (uint32 j{ 0 }; j < numRefs; ++j)
+		{
+			mesh.indices[refs[j]] = static_cast<uint32>(mesh.vertices.size());
+			Vertex& v{ oldVertices[oldIndices[refs[j]]] };
+			v.uv = mesh.uvSets[0][refs[j]];
+			mesh.vertices.emplace_back(v);
+
+			for (uint32 k{ j + 1 }; k < numRefs; ++k)
+			{
+				Vec2F& uv1{ mesh.uvSets[0][refs[k]] };
+				if (XMScalarNearEqual(v.uv.x, uv1.x, epsilon) && XMScalarNearEqual(v.uv.y, uv1.y, epsilon))
+				{
+					mesh.indices[refs[k]] = mesh.indices[refs[j]];
+					refs.erase(refs.begin() + k);
+					--numRefs;
+					--k;
+				}
+			}
+		}
+	}
+
+}
+
+void packVerticesStatic(Mesh& mesh)
+{
+	const uint32 numVertices{ static_cast<uint32>(mesh.vertices.size()) };
+	assert(numVertices);
+	mesh.packedVerticesStatic.reserve(numVertices);
+
+	for (uint32 i{ 0 }; i < numVertices; ++i)
+	{
+		Vertex& v{ mesh.vertices[i] };
+		const uint8 signs{ static_cast<uint8>((v.normal.z > 0.0f) << 1) };
+		const uint16 normalX{ static_cast<uint16>(packFloat<16>(v.tangent.x , -1.0f, 1.0f)) };
+		const uint16 normalY{ static_cast<uint16>(packFloat<16>(v.tangent.y , -1.0f, 1.0f)) };
+
+		mesh.packedVerticesStatic.emplace_back(packedvertex::VertexStatic{ v.position,{0, 0, 0},signs,{normalX,normalY},{},v.uv });
+	}
 }
 
 void processVertices(Mesh& mesh, const GeometryImportSettings& settings) 
