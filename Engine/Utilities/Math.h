@@ -39,7 +39,7 @@ namespace zone::math {
 	}
 
 	template<uint32 bits>
-	constexpr float UnpackFloat(uint32 i, float min, float max)
+	constexpr float UnpackToFloat(uint32 i, float min, float max)
 	{
 		assert(min < max);
 		return UnpackToUnitFloat<bits>(i) * (max - min) + min;

@@ -41,7 +41,14 @@ namespace ZoneEditor.Utilities.Controls
         }
 
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value), typeof(string), typeof(NumberBox),
-                                                                                              new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+                                                                                              new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                                                                                                  new PropertyChangedCallback(OnValueChanged)));
+
+        public static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as NumberBox).RaiseEvent(new RoutedEventArgs(ValueChangedEvent));
+        }
+
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
