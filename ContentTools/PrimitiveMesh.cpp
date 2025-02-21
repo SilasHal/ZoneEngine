@@ -97,6 +97,9 @@ Mesh createPlane(const PrimitivesInitInfo& info,
 
 	const uint32 numIndices{ 3 * 2 * horizontalCount * verticalCount };
 	assert(mesh.rawIndices.size() == numIndices);
+
+	mesh.uvSets.resize(1);
+
 	for (uint32 i{ 0 }; i < numIndices; ++i)
 	{
 		mesh.uvSets[0].emplace_back(uvs[mesh.rawIndices[i]]);
@@ -109,7 +112,7 @@ void createPlane(Scene& scene, const PrimitivesInitInfo& info)
 {
 	LodGroup lod{};
 	lod.name = "plane";
-	lod.Meshes.emplace_back(createPlane(info));
+	lod.meshes.emplace_back(createPlane(info));
 	scene.LodGroups.emplace_back(lod);
 }
 void createCube(Scene& scene, const PrimitivesInitInfo& info)

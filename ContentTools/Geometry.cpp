@@ -37,7 +37,7 @@ void recalculateNormals(Mesh& mesh)
 
 void processNormals(Mesh& mesh, float smoothingAngle)
 {
-	const float cosAngle{ XMScalarCos(pi - smoothingAngle * pi / 180.0f) };
+	const float cosAlpha{ XMScalarCos(pi - smoothingAngle * pi / 180.0f) };
 	const bool isHardEdge{ XMScalarNearEqual(smoothingAngle, 180.0f, epsilon) };
 	const bool isSoftEdge{ XMScalarNearEqual(smoothingAngle, 0.0f, epsilon) };
 	const uint32 numIndices{ static_cast<uint32>(mesh.rawIndices.size()) };
@@ -67,22 +67,22 @@ void processNormals(Mesh& mesh, float smoothingAngle)
 			{
 				for (uint32 k{ j + 1 }; k < numRefs; ++k)
 				{
-					float n{ 0.0f };
+					float cosTheta{ 0.0f };
 					XMVECTOR n2{ XMLoadFloat3(&mesh.normals[refs[k]]) };
 					if (!isSoftEdge)
 					{
 						// NOTE: cos(angle) = dot(n1, n2) / (||n1|| * ||n2||)
-						XMStoreFloat(&n, XMVector3Dot(n1, n2) * XMVector3ReciprocalLength(n1));
+						XMStoreFloat(&cosTheta, XMVector3Dot(n1, n2) * XMVector3ReciprocalLength(n1));
 					}
 
-				if (isSoftEdge|| n >=cosAngle)
-				{
-					n1 += n2;
-					mesh.indices[refs[k]] = mesh.indices[refs[j]];
-					refs.erase(refs.begin() + k);
-					--numRefs;
-					--k;
-				}
+					if (isSoftEdge || cosTheta >= cosAlpha)
+					{
+						n1 += n2;
+						mesh.indices[refs[k]] = mesh.indices[refs[j]];
+						refs.erase(refs.begin() + k);
+						--numRefs;
+						--k;
+					}
 
 				}
 			}
@@ -173,11 +173,70 @@ void processVertices(Mesh& mesh, const GeometryImportSettings& settings)
 
 void processScene(Scene& scene, const GeometryImportSettings& settings)
 {
+	for (auto& lod : scene.LodGroups)
+	{
+		for (auto& mesh : lod.meshes)
+		{
+			processVertices(mesh, settings);
+		}
+	}
+}
+
+uint64 getMeshSize(const Mesh& mesh)
+{
+	const uint64 numVertices{ mesh.vertices.size() };
+	const uint64 vertexBufferSize{ sizeof(packedvertex::VertexStatic) * numVertices };
+	const uint64 indexSize{ (numVertices < (1 << 16)) ? sizeof(uint16) : sizeof(uint32) };
+	const uint64 indexBufferSize{ sizeof(uint32) * mesh.indices.size() };
+	constexpr uint64 su32{ sizeof(uint32) };
+	const uint64 size{
+		su32 + mesh.name.size() +		// Mesh name length
+		su32 +							// mesh id
+		su32 +							// vertex buffer size
+		su32 +							// number of vertices
+		su32 +							// index buffer size (16 bit or 32 bit)
+		su32 +							// number of indices
+		sizeof(float) +					// LOD threshold
+		vertexBufferSize +				// vertex buffer
+		indexBufferSize					// index buffer
+	};
+
+	return size;
+}
+
+uint64 getSceneSize(const Scene& scene)
+{
+	constexpr uint64 su32{ sizeof(uint32) };
+	uint64 size
+	{
+		su32 +				 // Scene name length
+		scene.name.size() +  // room for scene name string
+		su32				 // number of LOD groups
+	};
+
+	for (auto& lod : scene.LodGroups)
+	{
+		uint64 lodSize
+		{
+			su32 + lod.name.size() + // LOD name length
+			su32					 // number of meshes in LOD
+		};
+
+		for (auto& mesh: lod.meshes)
+		{
+			lodSize += getMeshSize(mesh);
+		}
+
+		size += lodSize;
+	}
+
+	return size;
 
 }
 
 void packData(const Scene& scene, SceneData& data)
 {
+	const uint64 sceneSize{ getSceneSize(scene) };
 
 }
 

@@ -51,7 +51,7 @@ struct Mesh
 struct LodGroup
 {
 	std::string name;
-	std::vector<Mesh> Meshes;
+	std::vector<Mesh> meshes;
 };
 
 struct Scene 
