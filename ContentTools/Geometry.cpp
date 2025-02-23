@@ -237,6 +237,8 @@ uint64 getSceneSize(const Scene& scene)
 void packData(const Scene& scene, SceneData& data)
 {
 	const uint64 sceneSize{ getSceneSize(scene) };
+	data.bufferSize = static_cast<uint8>(sceneSize);
+	data.buffer = static_cast<uint8*>(CoTaskMemAlloc(sceneSize));
 
 }
 
