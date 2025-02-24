@@ -169,19 +169,6 @@ void processVertices(Mesh& mesh, const GeometryImportSettings& settings)
 	packVerticesStatic(mesh);
 }
 
-} // anonymous namespace
-
-void processScene(Scene& scene, const GeometryImportSettings& settings)
-{
-	for (auto& lod : scene.LodGroups)
-	{
-		for (auto& mesh : lod.meshes)
-		{
-			processVertices(mesh, settings);
-		}
-	}
-}
-
 uint64 getMeshSize(const Mesh& mesh)
 {
 	const uint64 numVertices{ mesh.vertices.size() };
@@ -191,7 +178,7 @@ uint64 getMeshSize(const Mesh& mesh)
 	constexpr uint64 su32{ sizeof(uint32) };
 	const uint64 size{
 		su32 + mesh.name.size() +		// Mesh name length
-		su32 +							// mesh id
+		su32 +							// lod id
 		su32 +							// vertex buffer size
 		su32 +							// number of vertices
 		su32 +							// index buffer size (16 bit or 32 bit)
@@ -222,7 +209,7 @@ uint64 getSceneSize(const Scene& scene)
 			su32					 // number of meshes in LOD
 		};
 
-		for (auto& mesh: lod.meshes)
+		for (auto& mesh : lod.meshes)
 		{
 			lodSize += getMeshSize(mesh);
 		}
@@ -234,11 +221,132 @@ uint64 getSceneSize(const Scene& scene)
 
 }
 
+void packMeshData(const Mesh& mesh, uint8* const buffer, uint64& at)
+{
+	constexpr uint64 su32{ sizeof(uint32) };
+	uint32 s{ 0 };
+
+	// mesh name
+	s = static_cast<uint32>(mesh.name.size());
+	memcpy(&buffer[at], &s, su32);
+	at += su32;
+	memcpy(&buffer[at], mesh.name.c_str(), s);
+	at += s;
+
+	// lod id
+	s = mesh.lodID;
+	memcpy(&buffer[at], &s, su32);
+	at += su32;
+
+	// vertex size
+	constexpr uint32 vertexSize{ sizeof(packedvertex::VertexStatic) };
+	s = vertexSize;
+	memcpy(&buffer[at], &s, su32);
+	at += su32;
+
+	// number of vertices
+	const uint32 numVertices{ static_cast<uint32>(mesh.vertices.size()) };
+	s = numVertices;
+	memcpy(&buffer[at], &s, su32);
+	at += su32;
+
+	// index size (16 bit or 32 bit)
+	const uint32 indexSize{ (numVertices < (1 << 16)) ? sizeof(uint16) : sizeof(uint32) };
+	s = indexSize;
+	memcpy(&buffer[at], &s, su32);
+	at += su32;
+
+	// number of indices
+	const uint32 numIndices{ static_cast<uint32>(mesh.indices.size()) };
+	s = numIndices;
+	memcpy(&buffer[at], &s, su32);
+	at += su32;
+
+	// LOD threshold
+	memcpy(&buffer[at], &mesh.lodThreshould, sizeof(float));
+	at += sizeof(float);
+
+	// vertex data
+	s = vertexSize * numVertices;
+	memcpy(&buffer[at], mesh.packedVerticesStatic.data(), s);
+	at += s;
+
+	//index data 
+	s = indexSize * numIndices;
+	void* data{ (void*)mesh.indices.data() };
+	utl::vector<uint16> indices;
+
+	if (indexSize == sizeof(uint16))
+	{
+		indices.resize(numIndices);
+		for (uint32 i{ 0 }; i < numIndices; ++i)
+		{
+			indices[i] = static_cast<uint16>(mesh.indices[i]);
+		}
+		data = (void*)indices.data();
+	}
+	memcpy(&buffer[at], data, s);
+	at += s;
+}
+
+
+} // anonymous namespace
+
+void processScene(Scene& scene, const GeometryImportSettings& settings)
+{
+	for (auto& lod : scene.LodGroups)
+	{
+		for (auto& mesh : lod.meshes)
+		{
+			processVertices(mesh, settings);
+		}
+	}
+}
+
+
 void packData(const Scene& scene, SceneData& data)
 {
+	constexpr uint64 su32{ sizeof(uint64) };
 	const uint64 sceneSize{ getSceneSize(scene) };
 	data.bufferSize = static_cast<uint8>(sceneSize);
 	data.buffer = static_cast<uint8*>(CoTaskMemAlloc(sceneSize));
+	assert(data.buffer);
+
+	uint8* const buffer{ data.buffer };
+	uint64 at{ 0 };
+	uint32 s{ 0 };
+
+	// scene name
+	s = static_cast<uint32>(scene.name.size());
+	memcpy(&buffer[at], &s, su32);
+	at += su32;
+	memcpy(&buffer[at], scene.name.c_str(), s); 
+	at += s;
+
+	// number of LODs
+	s = static_cast<uint32>(scene.LodGroups.size());
+	memcpy(&buffer[at], &s, su32);
+	at += su32;
+
+	for (auto& lod : scene.LodGroups)
+	{
+		// LOD name
+		s = static_cast<uint32>(lod.name.size());
+		memcpy(&buffer[at], &s, su32);
+		at += su32;
+		memcpy(&buffer[at], lod.name.c_str(), s);
+		at += s;
+
+		//number of meshes in this LOD
+		s = static_cast<uint32>(lod.meshes.size());
+		memcpy(&buffer[at], &s, su32);
+		at += su32;
+
+		for (auto& mesh : lod.meshes)
+		{
+			packMeshData(mesh, buffer, at);
+		}
+	}
 
 }
 
