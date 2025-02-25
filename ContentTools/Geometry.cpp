@@ -263,7 +263,7 @@ void packMeshData(const Mesh& mesh, uint8* const buffer, uint64& at)
 	at += su32;
 
 	// LOD threshold
-	memcpy(&buffer[at], &mesh.lodThreshould, sizeof(float));
+	memcpy(&buffer[at], &mesh.lodThreshold, sizeof(float));
 	at += sizeof(float);
 
 	// vertex data

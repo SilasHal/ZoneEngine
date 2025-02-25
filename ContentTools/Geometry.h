@@ -44,7 +44,7 @@ struct Mesh
 	//Output data
 	std::string									name;
 	utl::vector<packedvertex::VertexStatic>		packedVerticesStatic;
-	float										lodThreshould{ -1.0f };
+	float										lodThreshold{ -1.0f };
 	uint32										lodID{ uint32_invalid_id };
 };
 

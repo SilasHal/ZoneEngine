@@ -4,7 +4,7 @@
 #include "ToolsCommon.h"
 
 namespace zone::tools {
-enum PrimitivesMeshType :uint32
+enum PrimitiveMeshType :uint32
 {
 	Plane,
 	Cube,
@@ -16,9 +16,9 @@ enum PrimitivesMeshType :uint32
 	Count
 };
 
-struct PrimitivesInitInfo
+struct PrimitiveInitInfo
 {
-	PrimitivesMeshType		type;
+	PrimitiveMeshType		type;
 	uint32					segments[3]{ 1, 1, 1 };
 	math::Vec3F				size{ 1.0f, 1.0f, 1.0f };
 	uint32					lod{ 0 };

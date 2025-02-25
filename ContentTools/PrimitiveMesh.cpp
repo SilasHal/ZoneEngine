@@ -5,14 +5,14 @@
 namespace zone::tools {
 namespace {
 using namespace math;
-using PrimitiveMeshCreator = void(*)(Scene&, const PrimitivesInitInfo& info);
+using PrimitiveMeshCreator = void(*)(Scene&, const PrimitiveInitInfo& info);
 
-void createPlane(Scene& scene, const PrimitivesInitInfo& info);
-void createCube(Scene& scene, const PrimitivesInitInfo& info);
-void createUVSphere(Scene& scene, const PrimitivesInitInfo& info);
-void createICOSphere(Scene& scene, const PrimitivesInitInfo& info);
-void createCylinder(Scene& scene, const PrimitivesInitInfo& info);
-void createCapsule(Scene& scene, const PrimitivesInitInfo& info);
+void createPlane(Scene& scene, const PrimitiveInitInfo& info);
+void createCube(Scene& scene, const PrimitiveInitInfo& info);
+void createUVSphere(Scene& scene, const PrimitiveInitInfo& info);
+void createICOSphere(Scene& scene, const PrimitiveInitInfo& info);
+void createCylinder(Scene& scene, const PrimitiveInitInfo& info);
+void createCapsule(Scene& scene, const PrimitiveInitInfo& info);
 
 PrimitiveMeshCreator creators[]
 {
@@ -24,7 +24,7 @@ PrimitiveMeshCreator creators[]
 	createCapsule
 };
 
-static_assert(_countof(creators) == PrimitivesMeshType::Count);
+static_assert(_countof(creators) == PrimitiveMeshType::Count);
 
 struct Axis {
 	enum :uint32 {
@@ -34,7 +34,7 @@ struct Axis {
 	};
 };
 
-Mesh createPlane(const PrimitivesInitInfo& info,
+Mesh createPlane(const PrimitiveInitInfo& info,
 	uint32 horizontalIndex = Axis::X, uint32 verticalIndex = Axis::Z, bool flipWinding = false,
 	Vec3F offset = { -0.5f, 0.0f, -0.5f }, Vec2F uRange = { 0.0f, 1.0f }, Vec2F vRange = { 0.0f, 1.0f })
 {
@@ -73,8 +73,7 @@ Mesh createPlane(const PrimitivesInitInfo& info,
 	const uint32 rowLength{ horizontalCount + 1 }; // number of vertices in a row
 	for (uint32 j{ 0 }; j < verticalCount; ++j)
 	{
-		uint32 k{ 0 };
-		for (uint32 i{ k }; i < horizontalCount; ++i)
+		for (uint32 i{ 0 }; i < horizontalCount; ++i)
 		{
 			const uint32 index[4]
 			{
@@ -92,7 +91,6 @@ Mesh createPlane(const PrimitivesInitInfo& info,
 			mesh.rawIndices.emplace_back(index[flipWinding ? 3 : 1]);
 			mesh.rawIndices.emplace_back(index[flipWinding ? 1 : 3]);
 		}
-		++k;
 	}
 
 	const uint32 numIndices{ 3 * 2 * horizontalCount * verticalCount };
@@ -108,30 +106,30 @@ Mesh createPlane(const PrimitivesInitInfo& info,
 	return mesh;
 }
 
-void createPlane(Scene& scene, const PrimitivesInitInfo& info)
+void createPlane(Scene& scene, const PrimitiveInitInfo& info)
 {
 	LodGroup lod{};
 	lod.name = "plane";
 	lod.meshes.emplace_back(createPlane(info));
 	scene.LodGroups.emplace_back(lod);
 }
-void createCube(Scene& scene, const PrimitivesInitInfo& info)
+void createCube(Scene& scene, const PrimitiveInitInfo& info)
 {}
-void createUVSphere(Scene& scene, const PrimitivesInitInfo& info)
+void createUVSphere(Scene& scene, const PrimitiveInitInfo& info)
 {}
-void createICOSphere(Scene& scene, const PrimitivesInitInfo& info)
+void createICOSphere(Scene& scene, const PrimitiveInitInfo& info)
 {}
-void createCylinder(Scene& scene, const PrimitivesInitInfo& info)
+void createCylinder(Scene& scene, const PrimitiveInitInfo& info)
 {}
-void createCapsule(Scene& scene, const PrimitivesInitInfo& info)
+void createCapsule(Scene& scene, const PrimitiveInitInfo& info)
 {}
 
 } // anonymous namespace
 
-EDITOR_INTERFACE void CreatePrimitiveMesh(SceneData* data, PrimitivesInitInfo* info)
+EDITOR_INTERFACE void CreatePrimitiveMesh(SceneData* data, PrimitiveInitInfo* info)
 {
 	assert(data && info);
-	assert(info->type < PrimitivesMeshType::Count);
+	assert(info->type < PrimitiveMeshType::Count);
 	Scene scene{};
 	creators[info->type](scene, *info);
 	

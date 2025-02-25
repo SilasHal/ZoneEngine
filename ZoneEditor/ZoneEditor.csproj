@@ -26,6 +26,9 @@
     <None Remove="Resource\ZoneIcon.ico" />
   </ItemGroup>
 
+  <ItemGroup>
+  </ItemGroup>
+
 
 
   <ItemGroup>
