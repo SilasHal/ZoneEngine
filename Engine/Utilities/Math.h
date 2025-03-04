@@ -8,7 +8,7 @@ namespace zone::math {
 	template<typename T>
 	constexpr T clamp(T value, T min, T max)
 	{
-		return value < min ? min : value > max ? max : value;
+		return (value < min) ? min : (value > max) ? max : value;
 	}
 
 	template<uint32 bits>
@@ -34,7 +34,7 @@ namespace zone::math {
 	{
 		assert(min < max);
 		assert(f >= min && f <= max);
-		const float distance{ (f - min) / max - min };
+		const float distance{ (f - min) / (max - min) };
 		return PackUnitFloat<bits>(distance);
 	}
 

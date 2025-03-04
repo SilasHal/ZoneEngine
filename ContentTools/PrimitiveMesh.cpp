@@ -4,16 +4,16 @@ namespace zone::tools {
 	namespace {
 
 		using namespace math;
-		using MeshCreator = void(*)(Scene&, const MeshInitInfo& mesh);
+		using PrimitiveMeshCreator = void(*)(Scene&, const PrimitiveInitInfo& mesh);
 
-		void CreatePlane(Scene& scene, const MeshInitInfo& mesh);
-		void CreateCube(Scene& scene, const MeshInitInfo& mesh);
-		void CreateUVSphere(Scene& scene, const MeshInitInfo& mesh);
-		void CreateICOSphere(Scene& scene, const MeshInitInfo& mesh);
-		void CreateCylinder(Scene& scene, const MeshInitInfo& mesh);
-		void CreateCapsule(Scene& scene, const MeshInitInfo& mesh);
+		void CreatePlane(Scene& scene, const PrimitiveInitInfo& mesh);
+		void CreateCube(Scene& scene, const PrimitiveInitInfo& mesh);
+		void CreateUVSphere(Scene& scene, const PrimitiveInitInfo& mesh);
+		void CreateICOSphere(Scene& scene, const PrimitiveInitInfo& mesh);
+		void CreateCylinder(Scene& scene, const PrimitiveInitInfo& mesh);
+		void CreateCapsule(Scene& scene, const PrimitiveInitInfo& mesh);
 
-		MeshCreator meshCreators[]
+		PrimitiveMeshCreator meshCreators[]
 		{
 			CreatePlane,
 			CreateCube,
@@ -23,7 +23,7 @@ namespace zone::tools {
 			CreateCapsule
 		};
 
-		static_assert(_countof(meshCreators) == MeshType::Count);
+		static_assert(_countof(meshCreators) == PrimitiveMeshType::Count);
 
 		struct Axis
 		{
@@ -34,7 +34,7 @@ namespace zone::tools {
 			};
 		};
 
-		Mesh CreatePlane(const MeshInitInfo* mesh,
+		Mesh CreatePlane(const PrimitiveInitInfo* mesh,
 						 uint32 horizontalIndex = Axis::X, uint32 verticalIndex = Axis::Z, bool flipWinding = false,
 						 Vec3F offset = { -0.5f, 0.f, -0.5f }, Vec2F uRange = { 0.f, 1.f }, Vec2F vRange = { 0.f, 1.f })
 		{
@@ -73,8 +73,8 @@ namespace zone::tools {
 			const uint32 rowLength{ horizontalCount + 1 }; // number of vertices in a row
 			for (uint32 j{ 0 }; j < verticalCount; ++j)
 			{
-				uint32 k{ 0 };
-				for (uint32 i{ k }; i < horizontalCount; ++i)
+				
+				for (uint32 i{ 0 }; i < horizontalCount; ++i)
 				{
 					const uint32 index[4]
 					{
@@ -92,7 +92,7 @@ namespace zone::tools {
 					m.rawIndices.emplace_back(index[flipWinding ? 3 : 1]);
 					m.rawIndices.emplace_back(index[flipWinding ? 1 : 3]);
 				}
-				++k;
+				
 			}
 
 			const uint32 numIndices{ 3 * 2 * horizontalCount * verticalCount };
@@ -108,7 +108,7 @@ namespace zone::tools {
 			return m;
 		}
 
-		void CreatePlane(Scene& scene, const MeshInitInfo& mesh)
+		void CreatePlane(Scene& scene, const PrimitiveInitInfo& mesh)
 		{
 			// Create a plane mesh
 			// 0----1
@@ -122,29 +122,29 @@ namespace zone::tools {
 			scene.lodGroups.emplace_back(lod);
 		}
 
-		void CreateCube(Scene& scene, const MeshInitInfo& mesh)
+		void CreateCube(Scene& scene, const PrimitiveInitInfo& mesh)
 		{}
 
-		void CreateUVSphere(Scene& scene, const MeshInitInfo& mesh)
+		void CreateUVSphere(Scene& scene, const PrimitiveInitInfo& mesh)
 		{ }
 
-		void CreateICOSphere(Scene& scene, const MeshInitInfo& mesh)
+		void CreateICOSphere(Scene& scene, const PrimitiveInitInfo& mesh)
 		{ }
 
-		void CreateCylinder(Scene& scene, const MeshInitInfo& mesh)
+		void CreateCylinder(Scene& scene, const PrimitiveInitInfo& mesh)
 		{
 
 		}
-		void CreateCapsule(Scene& scene, const MeshInitInfo& mesh)
+		void CreateCapsule(Scene& scene, const PrimitiveInitInfo& mesh)
 		{
 		}
 
 	} // anonymous namespace
 
-	EDITOR_INTERFACE void CreateMesh(SceneData* data, MeshInitInfo* mesh)
+	EDITOR_INTERFACE void CreatePrimitiveMesh(SceneData* data, PrimitiveInitInfo* mesh)
 	{
 		assert(data && mesh);
-		assert(mesh->type < MeshType::Count);
+		assert(mesh->type < PrimitiveMeshType::Count); 
 		Scene scene{};
 		meshCreators[mesh->type](scene, *mesh);
 

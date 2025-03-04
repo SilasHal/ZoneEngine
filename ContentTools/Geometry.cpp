@@ -9,7 +9,7 @@ namespace zone::tools {
 		void RecalculateNormals(Mesh& m)
 		{
 			const uint32 numIndiecs{ (uint32)m.rawIndices.size() };
-			m.normals.reserve(numIndiecs);
+			m.normals.resize(numIndiecs);
 
 			for (uint32 i{ 0 }; i < numIndiecs; ++i)
 			{
@@ -104,7 +104,7 @@ namespace zone::tools {
 			for (uint32 i{ 0 }; i < numIndices; ++i)
 				idxRef[oldIndices[i]].emplace_back(i);
 
-			for (uint32 i{ 0 }; i < numIndices; ++i)
+			for (uint32 i{ 0 }; i < numVertices; ++i)
 			{
 				auto& refs{ idxRef[i] };
 				uint32 numRefs{ (uint32)refs.size() };

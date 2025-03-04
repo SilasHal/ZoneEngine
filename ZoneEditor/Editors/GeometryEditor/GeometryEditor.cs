@@ -116,7 +116,7 @@ namespace ZoneEditor.Editors
             }
         }
 
-        private Color _skyLight = (Color)ColorConverter.ConvertFromString("#ff11b30");
+        private Color _skyLight = (Color)ColorConverter.ConvertFromString("#ff11bb30");
         public Color SkyLight
         {
             get => _skyLight;
